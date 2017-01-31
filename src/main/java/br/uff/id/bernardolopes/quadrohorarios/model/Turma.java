@@ -5,10 +5,35 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.model;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
 /**
  *
  * @author bernardolopes at id.uff.br
  */
-public class Turma {
+
+@Entity
+public class Turma implements Serializable {
     
+    @Id
+    private final String codigo;
+    
+    @ManyToOne
+    private final Disciplina disciplina;
+
+    public Turma(String codigo, Disciplina disciplina) {
+        this.codigo = codigo;
+        this.disciplina = disciplina;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public Disciplina getDisciplina() {
+        return disciplina;
+    }
 }

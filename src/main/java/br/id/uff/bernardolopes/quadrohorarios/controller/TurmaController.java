@@ -5,32 +5,36 @@
  */
 package br.id.uff.bernardolopes.quadrohorarios.controller;
 
-import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
+import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
-import javax.transaction.Transactional;
+import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author bernardolopes at id.uff.br
  */
-
 @RestController
-public class DisciplinaController {
+public class TurmaController {
+    
+    @Autowired
+    private TurmaDAO turmaDAO;
     
     @Autowired
     private DisciplinaDAO disciplinaDAO;
     
-    @Transactional
-    @PostMapping(path = "/disciplinas")
-    public void criarDisciplina(String codigo, String nome, Curso curso){
-        Disciplina d = new Disciplina(codigo, nome, curso);
-        disciplinaDAO.save(d);
+    @PostMapping(path = "/turmas")
+    public void criarTurma(String codigo, Disciplina disciplina){
+        Turma t = new Turma(codigo, disciplina);
+        turmaDAO.save(t);
     }
     
+    @PostMapping(path = "/turmas")
+    public void criarTurma(String codigoTurma, String codigoDisciplina){
+        Disciplina d = disciplinaDAO.findOne(codigoDisciplina);
+        this.criarTurma(codigoTurma, d);
+    }
 }
