@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.id.uff.bernardolopes.quadrohorarios.controller;
+package br.uff.id.bernardolopes.quadrohorarios.controller;
 
 import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
