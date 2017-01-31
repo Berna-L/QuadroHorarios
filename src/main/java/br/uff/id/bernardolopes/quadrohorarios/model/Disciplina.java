@@ -53,6 +53,4 @@ public class Disciplina implements Serializable {
     public List<Turma> getTurmas() {
         return turmas;
     }
-    
-    
 }
