@@ -7,6 +7,7 @@ package br.id.uff.bernardolopes.quadrohorarios;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  *
@@ -14,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
+@ComponentScan({"br.uff.id.bernardolopes.quadrohorarios.repository"})
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

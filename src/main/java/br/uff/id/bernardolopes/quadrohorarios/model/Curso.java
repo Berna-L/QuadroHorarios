@@ -18,17 +18,20 @@ import javax.persistence.Id;
 public class Curso implements Serializable {
     
     @Id 
-    private final String curso;
+    private String codigo;
     
-    private final String nome;
+    private String nome;
 
+    public Curso() {
+    }
+    
     public Curso(String curso, String nome) {
-        this.curso = curso;
+        this.codigo = codigo;
         this.nome = nome;
     }
 
-    public String getCurso() {
-        return curso;
+    public String getCodigo() {
+        return codigo;
     }
 
     public String getNome() {

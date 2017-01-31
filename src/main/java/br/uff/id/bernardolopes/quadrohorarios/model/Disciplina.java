@@ -21,15 +21,19 @@ import javax.persistence.OneToMany;
 public class Disciplina implements Serializable {
     
     @Id
-    private final String codigo;
+    private String codigo;
     
-    private final String nome;
+    private String nome;
     
     @ManyToOne
-    private final Curso curso;
+    private Curso curso;
     
     @OneToMany(mappedBy = "disciplina", targetEntity = Disciplina.class)
-    private final List<Turma> turmas;
+    private List<Turma> turmas;
+
+    public Disciplina() {
+//        this.turmas = new ArrayList<>();
+    }
 
     public Disciplina(String codigo, String nome, Curso curso) {
         this.codigo = codigo;

@@ -19,11 +19,14 @@ import javax.persistence.ManyToOne;
 public class Turma implements Serializable {
     
     @Id
-    private final String codigo;
+    private String codigo;
     
     @ManyToOne
-    private final Disciplina disciplina;
+    private Disciplina disciplina;
 
+    public Turma() {
+    }
+    
     public Turma(String codigo, Disciplina disciplina) {
         this.codigo = codigo;
         this.disciplina = disciplina;
