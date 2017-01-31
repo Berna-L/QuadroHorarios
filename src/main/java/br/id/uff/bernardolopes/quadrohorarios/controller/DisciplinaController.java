@@ -7,12 +7,11 @@ package br.id.uff.bernardolopes.quadrohorarios.controller;
 
 import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
+import br.uff.id.bernardolopes.quadrohorarios.repository.CursoDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -26,11 +25,24 @@ public class DisciplinaController {
     @Autowired
     private DisciplinaDAO disciplinaDAO;
     
+    @Autowired
+    private CursoDAO cursoDAO;
+    
     @Transactional
     @PostMapping(path = "/disciplinas")
     public void criarDisciplina(String codigo, String nome, Curso curso){
-        Disciplina d = new Disciplina(codigo, nome, curso);
-        disciplinaDAO.save(d);
+        if (curso != null){
+            Disciplina d = new Disciplina(codigo, nome, curso);
+            disciplinaDAO.save(d);
+        } else {
+            throw new IllegalArgumentException("Curso inválido!");
+        }
     }
     
+    @Transactional
+    @PostMapping(path = "/disciplinas")
+    public void criarDisciplina(String codigoDisciplina, String nome, String codigoCurso){
+        Curso c = cursoDAO.findOne(codigoCurso);
+        this.criarDisciplina(codigoDisciplina, nome, c);
+    }
 }

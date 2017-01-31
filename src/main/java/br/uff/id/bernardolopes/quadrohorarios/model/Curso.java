@@ -5,10 +5,33 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.model;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  *
  * @author bernardolopes at id.uff.br
  */
-public class Curso {
+
+@Entity
+public class Curso implements Serializable {
     
+    @Id 
+    private final String curso;
+    
+    private final String nome;
+
+    public Curso(String curso, String nome) {
+        this.curso = curso;
+        this.nome = nome;
+    }
+
+    public String getCurso() {
+        return curso;
+    }
+
+    public String getNome() {
+        return nome;
+    }
 }
