@@ -7,6 +7,7 @@ package br.uff.id.bernardolopes.quadrohorarios.model;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -19,6 +20,9 @@ import javax.persistence.ManyToOne;
 public class Turma implements Serializable {
     
     @Id
+    @GeneratedValue
+    private Long id;
+    
     private String codigo;
     
     @ManyToOne
@@ -32,6 +36,10 @@ public class Turma implements Serializable {
         this.disciplina = disciplina;
     }
 
+    public Long getId() {
+        return id;
+    }
+    
     public String getCodigo() {
         return codigo;
     }

@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -21,6 +22,9 @@ import javax.persistence.OneToMany;
 public class Disciplina implements Serializable {
     
     @Id
+    @GeneratedValue
+    private Long id;
+    
     private String codigo;
     
     private String nome;
@@ -28,8 +32,8 @@ public class Disciplina implements Serializable {
     @ManyToOne
     private Curso curso;
     
-    @OneToMany(mappedBy = "disciplina", targetEntity = Disciplina.class)
-    private List<Turma> turmas;
+//    @OneToMany(mappedBy = "disciplina", targetEntity = Turma.class)
+//    private List<Turma> turmas;
 
     public Disciplina() {
 //        this.turmas = new ArrayList<>();
@@ -39,9 +43,12 @@ public class Disciplina implements Serializable {
         this.codigo = codigo;
         this.nome = nome;
         this.curso = curso;
-        this.turmas = new ArrayList<>();
     }
 
+    public Long getId(){
+        return id;
+    }
+    
     public String getCodigo() {
         return codigo;
     }
@@ -52,9 +59,5 @@ public class Disciplina implements Serializable {
 
     public Curso getCurso() {
         return curso;
-    }
-
-    public List<Turma> getTurmas() {
-        return turmas;
     }
 }

@@ -11,6 +11,7 @@ import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,9 +28,9 @@ public class TurmaController {
     @Autowired
     private DisciplinaDAO disciplinaDAO;
     
-    @Transactional
-    @PostMapping(path = "/turmas")
-    public void criarTurma(String codigo, Disciplina disciplina){
+//    @Transactional
+//    @PostMapping(path = "/turmas")
+    public void criarTurmaComObjetoDisciplina(String codigo, Disciplina disciplina){
         if (disciplina != null){
             Turma t = new Turma(codigo, disciplina);
             turmaDAO.save(t);
@@ -37,11 +38,14 @@ public class TurmaController {
             throw new IllegalArgumentException("Turma inválida!");
         }
     }
-    
-    @Transactional
-    @PostMapping(path = "/turmas")
-    public void criarTurma(String codigoTurma, String codigoDisciplina){
-        Disciplina d = disciplinaDAO.findOne(codigoDisciplina);
-        this.criarTurma(codigoTurma, d);
+//    
+//    @GetMapping(path = "/turmas")
+//    public void getTurma()
+//    
+//    @Transactional
+//    @PostMapping(path = "/turmas")
+    public void criarTurmaComIdDisciplina(String codigoTurma, Long idDisciplina){
+        Disciplina d = disciplinaDAO.findOne(idDisciplina);
+        this.criarTurmaComObjetoDisciplina(codigoTurma, d);
     }
 }

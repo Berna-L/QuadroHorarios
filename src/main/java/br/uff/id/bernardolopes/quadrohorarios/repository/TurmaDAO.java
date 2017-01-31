@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author bernardolopes at id.uff.br
  */
-public interface TurmaDAO extends JpaRepository<Turma, String>{
+public interface TurmaDAO extends JpaRepository<Turma, Long>{
     
 }
