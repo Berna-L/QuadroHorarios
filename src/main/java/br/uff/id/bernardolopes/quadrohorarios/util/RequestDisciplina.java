@@ -19,12 +19,6 @@ public class RequestDisciplina implements Serializable {
     
     public RequestDisciplina() {}
 
-    public RequestDisciplina(String codigoDisciplina, String nome, Long codigoCurso) {
-        this.codigoDisciplina = codigoDisciplina;
-        this.nome = nome;
-        this.codigoCurso = codigoCurso;
-    }
-
     public String getCodigoDisciplina() {
         return codigoDisciplina;
     }
@@ -47,11 +41,6 @@ public class RequestDisciplina implements Serializable {
 
     public void setCodigoCurso(Long codigoCurso) {
         this.codigoCurso = codigoCurso;
-    }
-
-    @Override
-    public String toString() {
-        return "RespostaPost{" + "codigoDisciplina=" + codigoDisciplina + ", nome=" + nome + ", codigoCurso=" + codigoCurso + '}';
     }
     
     public boolean isValid() {
