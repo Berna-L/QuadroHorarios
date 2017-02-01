@@ -5,10 +5,12 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.controller;
 
+import br.uff.id.bernardolopes.quadrohorarios.exception.InstanceAlreadyExistsException;
 import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.repository.CursoDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
+import br.uff.id.bernardolopes.quadrohorarios.service.DisciplinaService;
 import br.uff.id.bernardolopes.quadrohorarios.util.RequestDisciplina;
 import java.io.IOException;
 import java.net.URI;
@@ -39,21 +41,7 @@ import org.springframework.web.client.RestTemplate;
 public class DisciplinaController {
     
     @Autowired
-    private DisciplinaDAO disciplinaDAO;
-    
-    @Autowired
-    private CursoDAO cursoDAO;
-    
-//    @Transactional
-//    @PostMapping(path = "/disciplinas")
-//    public void criarDisciplinaComObjetoCurso(String codigo, String nome, Curso curso){
-//        if (curso != null){
-//            Disciplina d = new Disciplina(codigo, nome, curso);
-//            disciplinaDAO.save(d);
-//        } else {
-//            throw new IllegalArgumentException("Curso inválido!");
-//        }
-//    }
+    private DisciplinaService service;
     
     @Transactional
     @ResponseBody
@@ -61,17 +49,20 @@ public class DisciplinaController {
     public ResponseEntity<Disciplina> criarDisciplina(
             @RequestBody RequestDisciplina request, HttpServletResponse response){
         if (request.isValid()){
-            if (disciplinaDAO.findByCodigo(request.getCodigoDisciplina()).isEmpty()){
-                Curso c = cursoDAO.findOne(request.getCodigoCurso());
-                Disciplina d = new Disciplina(request.getCodigoDisciplina(), request.getNome(), c);
-                disciplinaDAO.save(d);
+            Disciplina d;
+            try{
+                d = service.criarDisciplina(request.getCodigoDisciplina(), request.getNome(), request.getCodigoCurso());
+            } catch (InstanceAlreadyExistsException ex){
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);                
+            }
+            if (d != null){
                 try {
                     return ResponseEntity.created(new URI("/disciplinas/" + d.getId())).body(d);
                 } catch (URISyntaxException ex) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
                 }
             } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+                return ResponseEntity.badRequest().body(null);
             }
         } else {
             return ResponseEntity.badRequest().body(null);
