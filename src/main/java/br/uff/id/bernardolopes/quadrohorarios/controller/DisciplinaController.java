@@ -9,9 +9,18 @@ import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.repository.CursoDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
-import br.uff.id.bernardolopes.quadrohorarios.util.RespostaDisciplina;
+import br.uff.id.bernardolopes.quadrohorarios.util.RequestDisciplina;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -36,25 +46,32 @@ public class DisciplinaController {
     
 //    @Transactional
 //    @PostMapping(path = "/disciplinas")
-    public void criarDisciplinaComObjetoCurso(String codigo, String nome, Curso curso){
-        if (curso != null){
-            Disciplina d = new Disciplina(codigo, nome, curso);
-            disciplinaDAO.save(d);
-        } else {
-            throw new IllegalArgumentException("Curso inválido!");
-        }
-    }
+//    public void criarDisciplinaComObjetoCurso(String codigo, String nome, Curso curso){
+//        if (curso != null){
+//            Disciplina d = new Disciplina(codigo, nome, curso);
+//            disciplinaDAO.save(d);
+//        } else {
+//            throw new IllegalArgumentException("Curso inválido!");
+//        }
+//    }
     
     @Transactional
     @ResponseBody
     @RequestMapping(path = "/disciplinas", method = RequestMethod.POST)
-    public void criarDisciplinaComCodigoCurso(
-            @RequestBody RespostaDisciplina resposta){
-//        System.out.println("codigoDisciplina" + codigoDisciplina);
-//        System.out.println("nome" + nome);
-//        System.out.println("c" + codigoCurso);
-          System.out.println(resposta);
-//        Curso c = cursoDAO.findOne(resposta.getCodigoCurso());
-//        this.criarDisciplinaComObjetoCurso(resposta.getCodigoDisciplina(), resposta.getNome(), c);
+    public ResponseEntity<Disciplina> criarDisciplina(
+            @RequestBody RequestDisciplina request, HttpServletResponse response){
+        RestTemplate rt = new RestTemplate();
+        if (request.isValid()){
+            Curso c = cursoDAO.findOne(request.getCodigoCurso());
+            Disciplina d = new Disciplina(request.getCodigoDisciplina(), request.getNome(), c);
+            disciplinaDAO.save(d);
+            try {
+                return ResponseEntity.created(new URI("/disciplinas/" + d.getId())).body(d);
+            } catch (URISyntaxException ex) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }

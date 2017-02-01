@@ -9,7 +9,7 @@
                 <goal>spring-boot:run</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+                <exec.args>-classpath %classpath br.uff.id.bernardolopes.quadrohorarios.Application</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>

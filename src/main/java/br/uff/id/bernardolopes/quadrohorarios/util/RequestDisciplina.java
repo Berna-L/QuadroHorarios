@@ -5,17 +5,21 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.util;
 
+import java.io.Serializable;
+
 /**
  *
  * @author bernardolopes at id.uff.br
  */
-public class RespostaDisciplina {
+public class RequestDisciplina implements Serializable {
 
     private String codigoDisciplina;
     private String nome;
     private Long codigoCurso;
+    
+    public RequestDisciplina() {}
 
-    public RespostaDisciplina(String codigoDisciplina, String nome, Long codigoCurso) {
+    public RequestDisciplina(String codigoDisciplina, String nome, Long codigoCurso) {
         this.codigoDisciplina = codigoDisciplina;
         this.nome = nome;
         this.codigoCurso = codigoCurso;
@@ -49,5 +53,8 @@ public class RespostaDisciplina {
     public String toString() {
         return "RespostaPost{" + "codigoDisciplina=" + codigoDisciplina + ", nome=" + nome + ", codigoCurso=" + codigoCurso + '}';
     }
-
+    
+    public boolean isValid() {
+        return codigoDisciplina != null && nome != null && codigoCurso != null;
+    }
 }
