@@ -35,6 +35,15 @@ public class DisciplinaService {
     
     public Disciplina criarDisciplina(String codigoDisciplina, String nome, Curso curso) throws InstanceAlreadyExistsException {
         if (disciplinaDAO.findByCodigo(codigoDisciplina).isEmpty()) {
+            if (codigoDisciplina == null){
+                throw new IllegalArgumentException("Código da disciplina não pode ser nulo!");
+            }
+            if (nome == null){
+                throw new IllegalArgumentException("Nome da disciplina não pode ser nulo!");
+            }
+            if (curso == null){
+                throw new IllegalArgumentException("Curso não pode ser nulo!");
+            }
             Disciplina d = new Disciplina(codigoDisciplina, nome, curso);
             disciplinaDAO.save(d);
             return d;
@@ -46,6 +55,9 @@ public class DisciplinaService {
 
     public Disciplina criarDisciplina(String codigoDisciplina, String nome, Long codigoCurso) throws InstanceAlreadyExistsException {
         Curso curso = cursoDAO.findOne(codigoCurso);
+        if (curso == null){
+            throw new IllegalArgumentException("Curso não encontrado com código " + codigoCurso);
+        }
         return criarDisciplina(codigoDisciplina, nome, curso);
     }
 }

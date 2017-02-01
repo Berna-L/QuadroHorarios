@@ -32,8 +32,11 @@ public class TurmaService {
 
     public Turma criarTurma(String codigoTurma, Disciplina disciplina) throws InstanceAlreadyExistsException {
         if (turmaDAO.findByCodigoAndDisciplina(codigoTurma, disciplina).isEmpty()) {
+            if (codigoTurma == null) {
+                throw new IllegalArgumentException("Código da turma não pode ser nulo!");
+            }
             if (disciplina == null) {
-                return null;
+                throw new IllegalArgumentException("Disciplina não pode ser nulo!");
             }
             Turma t = new Turma(codigoTurma, disciplina);
             turmaDAO.save(t);
@@ -42,11 +45,14 @@ public class TurmaService {
             throw new InstanceAlreadyExistsException();
         }
 
-
     }
 
     public Turma criarTurma(String codigoTurma, String codigoDisciplina) throws InstanceAlreadyExistsException {
-        Disciplina d = disciplinaDAO.findByCodigo(codigoDisciplina).get(0);
-        return criarTurma(codigoTurma, d);
+        try {
+            Disciplina d = disciplinaDAO.findByCodigo(codigoDisciplina).get(0);
+            return criarTurma(codigoTurma, d);
+        } catch (IndexOutOfBoundsException ex) {
+            throw new IllegalArgumentException("Disciplina não encontrada com código " + codigoDisciplina);
+        }
     }
 }
