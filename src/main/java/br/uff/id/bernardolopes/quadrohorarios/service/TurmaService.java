@@ -39,7 +39,7 @@ public class TurmaService {
     }
     
     public Turma criarTurma(String codigoTurma, Disciplina disciplina) throws InstanceAlreadyExistsException {
-        if (turmaDAO.findByCodigoAndDisciplina(codigoTurma, disciplina).isEmpty()) {
+        if (turmaDAO.findByCodigoAndDisciplina(codigoTurma, disciplina).isEmpty()) { //Se já existe turma com código, não pode criar outra
             if (codigoTurma == null) {
                 throw new IllegalArgumentException("Código da turma não pode ser nulo!");
             }

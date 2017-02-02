@@ -42,7 +42,7 @@ public class DisciplinaService {
     }
     
     public Disciplina criarDisciplina(String codigoDisciplina, String nome, Curso curso) throws InstanceAlreadyExistsException {
-        if (disciplinaDAO.findByCodigo(codigoDisciplina).isEmpty()) {
+        if (disciplinaDAO.findByCodigo(codigoDisciplina).isEmpty()) { //Se já existe disciplina com código, não pode criar outra
             if (codigoDisciplina == null){
                 throw new IllegalArgumentException("Código da disciplina não pode ser nulo!");
             }

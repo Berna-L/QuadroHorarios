@@ -41,12 +41,7 @@ public class TurmaServiceTest {
     private TurmaService service;
 
     private static final String CODIGO_TURMA = "T1";
-    private static final String CODIGO_TURMA_2 = "T2";
 
-    private static final String CODIGO_TURMA_EXISTENTE = "A1";
-    private static final String CODIGO_DISCIPLINA_EXISTENTE = "TCC00173";
-
-    private static final String CODIGO_DISCIPLINA = "GMA00108";
     private static final String CODIGO_DISCIPLINA_INEXISTENTE = "TES99999";
 
     @Before
@@ -74,8 +69,8 @@ public class TurmaServiceTest {
         List<Disciplina> mockList = mock(List.class);
         when(mockList.get(0)).thenReturn(d);
         when(disciplinaDAO.findByCodigo(d.getCodigo())).thenReturn(mockList);
-        Turma t = service.criarTurma(CODIGO_TURMA_2, d.getCodigo());
-        assertEquals(CODIGO_TURMA_2, t.getCodigo());
+        Turma t = service.criarTurma(CODIGO_TURMA, d.getCodigo());
+        assertEquals(CODIGO_TURMA, t.getCodigo());
         assertEquals(d.getCodigo(), t.getDisciplina().getCodigo());
     }
 

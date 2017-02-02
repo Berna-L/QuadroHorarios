@@ -75,9 +75,9 @@ public class DisciplinaServiceTest {
     public void insereNoBancoComCodigoCurso() {
         Curso c = Fixture.from(Curso.class).gimme("valido");
         when(cursoDAO.findOne(c.getCodigo())).thenReturn(c);
-        Disciplina d = service.criarDisciplina(CODIGO_DISCIPLINA_2, NOME_DISCIPLINA_2, c.getCodigo());
-        assertEquals(CODIGO_DISCIPLINA_2, d.getCodigo());
-        assertEquals(NOME_DISCIPLINA_2, d.getNome());
+        Disciplina d = service.criarDisciplina(CODIGO_DISCIPLINA, NOME_DISCIPLINA_2, c.getCodigo());
+        assertEquals(CODIGO_DISCIPLINA, d.getCodigo());
+        assertEquals(NOME_DISCIPLINA, d.getNome());
         assertEquals(c.getCodigo(), d.getCurso().getCodigo());
         verify(cursoDAO).findOne(c.getCodigo());
         verify(disciplinaDAO).findByCodigo(CODIGO_DISCIPLINA);
