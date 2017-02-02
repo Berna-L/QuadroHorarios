@@ -6,10 +6,16 @@
 package br.uff.id.bernardolopes.quadrohorarios.service;
 
 import br.uff.id.bernardolopes.quadrohorarios.exception.InstanceAlreadyExistsException;
+import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
+import br.uff.id.bernardolopes.quadrohorarios.model.VagaTurmaCurso;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
+import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,6 +31,9 @@ public class TurmaService {
     private TurmaDAO turmaDAO;
 
     @Autowired
+    private VagaTurmaCursoDAO vagaTurmaCursoDAO;
+
+    @Autowired
     private DisciplinaDAO disciplinaDAO;
 
     public TurmaService() {
@@ -37,7 +46,7 @@ public class TurmaService {
     public void setDisciplinaDAO(DisciplinaDAO disciplinaDAO) {
         this.disciplinaDAO = disciplinaDAO;
     }
-    
+
     public Turma criarTurma(String codigoTurma, Disciplina disciplina) throws InstanceAlreadyExistsException {
         if (turmaDAO.findByCodigoAndDisciplina(codigoTurma, disciplina).isEmpty()) { //Se já existe turma com código, não pode criar outra
             if (codigoTurma == null) {
@@ -62,5 +71,24 @@ public class TurmaService {
         } catch (IndexOutOfBoundsException ex) {
             throw new IllegalArgumentException("Disciplina não encontrada com código " + codigoDisciplina);
         }
+    }
+
+    public Map<Curso, Integer> getVagasPorCurso(Turma turma) {
+        List<VagaTurmaCurso> lista = vagaTurmaCursoDAO.findByTurma(turma);
+        Map<Curso, Integer> relacaoVagas = new HashMap<>();
+        for (VagaTurmaCurso entrada : lista) {
+            relacaoVagas.put(entrada.getCurso(), entrada.getVagas());
+        }
+        return relacaoVagas;
+    }
+
+    public Map<Curso, Integer> fakeGetInscritosPorCurso(Turma turma) {
+        //NOTHING IS REAL ANYMORE
+        Map<Curso, Integer> relacaoVagas = getVagasPorCurso(turma);
+        Map<Curso, Integer> relacaoInscritos = new HashMap<>();
+        for (Curso curso : relacaoVagas.keySet()) {
+            relacaoInscritos.put(curso, (int) Math.floor(Math.random() * relacaoVagas.get(curso).doubleValue()));
+        }
+        return relacaoInscritos;
     }
 }

@@ -14,7 +14,7 @@ import javax.persistence.Id;
  * @author bernardolopes at id.uff.br
  */
 @Entity
-public class VTC implements Serializable {
+public class VagaTurmaCurso implements Serializable {
     
     @Id
     private long id;
@@ -25,10 +25,10 @@ public class VTC implements Serializable {
     
     private int vagas;
 
-    public VTC() {
+    public VagaTurmaCurso() {
     }
 
-    public VTC(long id, Turma turma, Curso curso, int vagas) {
+    public VagaTurmaCurso(long id, Turma turma, Curso curso, int vagas) {
         this.id = id;
         this.turma = turma;
         this.curso = curso;
