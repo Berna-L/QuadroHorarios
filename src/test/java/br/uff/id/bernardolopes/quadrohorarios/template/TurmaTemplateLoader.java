@@ -16,12 +16,19 @@ import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
  * @author bernardolopes at id.uff.br
  */
 public class TurmaTemplateLoader implements TemplateLoader {
+
     @Override
     public void load() {
         Fixture.of(Turma.class).addTemplate("valido", new Rule() {
             {
                 add("codigo", regex("[A-Z]{1}[0-9]{1}"));
                 add("disciplina", one(Disciplina.class, "valido"));
+            }
+        });
+        Fixture.of(Turma.class).addTemplate("turma-disciplina-fixas", new Rule() {
+            {
+                add("codigo", "A1");
+                add("disciplina", one(Disciplina.class, "turma-disciplina-fixas"));
             }
         });
     }

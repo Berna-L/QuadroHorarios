@@ -43,6 +43,10 @@ public class TurmaService {
         this.turmaDAO = turmaDAO;
     }
 
+    public void setVagaTurmaCursoDAO(VagaTurmaCursoDAO vagaTurmaCursoDAO) {
+        this.vagaTurmaCursoDAO = vagaTurmaCursoDAO;
+    }
+
     public void setDisciplinaDAO(DisciplinaDAO disciplinaDAO) {
         this.disciplinaDAO = disciplinaDAO;
     }
@@ -74,6 +78,9 @@ public class TurmaService {
     }
 
     public Map<Curso, Integer> getVagasPorCurso(Turma turma) {
+        if (turma == null){
+            throw new IllegalArgumentException("Turma não pode ser nulo!");
+        }
         List<VagaTurmaCurso> lista = vagaTurmaCursoDAO.findByTurma(turma);
         Map<Curso, Integer> relacaoVagas = new HashMap<>();
         for (VagaTurmaCurso entrada : lista) {

@@ -8,11 +8,15 @@ package br.uff.id.bernardolopes.quadrohorarios.service;
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import br.uff.id.bernardolopes.quadrohorarios.exception.InstanceAlreadyExistsException;
+import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
+import br.uff.id.bernardolopes.quadrohorarios.model.VagaTurmaCurso;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
+import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
 import java.util.List;
+import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -35,6 +39,8 @@ public class TurmaServiceTest {
 
     private TurmaDAO turmaDAO;
 
+    private VagaTurmaCursoDAO vagaTurmaCursoDAO;
+
     private DisciplinaDAO disciplinaDAO;
 
     @Autowired
@@ -47,8 +53,10 @@ public class TurmaServiceTest {
     @Before
     public void setUp() {
         turmaDAO = mock(TurmaDAO.class);
+        vagaTurmaCursoDAO = mock(VagaTurmaCursoDAO.class);
         disciplinaDAO = mock(DisciplinaDAO.class);
         service.setTurmaDAO(turmaDAO);
+        service.setVagaTurmaCursoDAO(vagaTurmaCursoDAO);
         service.setDisciplinaDAO(disciplinaDAO);
         FixtureFactoryLoader.loadTemplates("br.uff.id.bernardolopes.quadrohorarios.template");
     }
@@ -101,7 +109,24 @@ public class TurmaServiceTest {
     public void insereNoBancoComDisciplinaInexistenteDaErro() {
         List<Disciplina> mockList = mock(List.class);
         when(mockList.get(0)).thenReturn(null);
-            when(disciplinaDAO.findByCodigo(CODIGO_DISCIPLINA_INEXISTENTE)).thenReturn(mockList);
+        when(disciplinaDAO.findByCodigo(CODIGO_DISCIPLINA_INEXISTENTE)).thenReturn(mockList);
         service.criarTurma(CODIGO_TURMA, CODIGO_DISCIPLINA_INEXISTENTE);
+    }
+
+    @Test
+    public void getVagasPorTurmaOK() {
+        Turma t = Fixture.from(Turma.class).gimme("turma-disciplina-fixas");
+        List<VagaTurmaCurso> listaEsperada = Fixture.from(VagaTurmaCurso.class).gimme(15, "turma-disciplina-fixas");
+        when(vagaTurmaCursoDAO.findByTurma(t)).thenReturn(listaEsperada);
+        Map<Curso, Integer> mapa = service.getVagasPorCurso(t);
+        for (VagaTurmaCurso vtc : listaEsperada){
+            assertEquals(vtc.getVagas(), (long) mapa.get(vtc.getCurso()));
+        }
+        verify(vagaTurmaCursoDAO).findByTurma(t);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void getVagasPorTurmaComNuloDaErro(){
+        service.getVagasPorCurso(null);
     }
 }

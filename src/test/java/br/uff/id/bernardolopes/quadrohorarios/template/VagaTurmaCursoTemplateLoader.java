@@ -9,28 +9,29 @@ import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.Rule;
 import br.com.six2six.fixturefactory.loader.TemplateLoader;
 import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
-import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
+import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
+import br.uff.id.bernardolopes.quadrohorarios.model.VagaTurmaCurso;
 
 /**
  *
  * @author bernardolopes at id.uff.br
  */
-public class DisciplinaTemplateLoader implements TemplateLoader {
+public class VagaTurmaCursoTemplateLoader implements TemplateLoader {
+
     @Override
     public void load() {
-        Fixture.of(Disciplina.class).addTemplate("valido", new Rule() {
+        Fixture.of(VagaTurmaCurso.class).addTemplate("valido", new Rule() {
             {
-                add("codigo", regex("TES\\d{5}"));
-                add("nome", regex("Cálculo \\d{3}"));
+                add("turma", one(Turma.class, "valido"));
                 add("curso", one(Curso.class, "valido"));
+                add("vagas", random(Integer.class, 1, 80));
             }
         });
-        
-        Fixture.of(Disciplina.class).addTemplate("turma-disciplina-fixas", new Rule() {
+        Fixture.of(VagaTurmaCurso.class).addTemplate("turma-disciplina-fixas", new Rule() {
             {
-                add("codigo", regex("TES00001"));
-                add("nome", regex("Cálculo fixo"));
+                add("turma", one(Turma.class, "turma-disciplina-fixas"));
                 add("curso", one(Curso.class, "valido"));
+                add("vagas", random(Integer.class, 1, 80));
             }
         });
     }
