@@ -32,6 +32,14 @@ public class DisciplinaService {
 
     public DisciplinaService() {
     }
+
+    public void setDisciplinaDAO(DisciplinaDAO disciplinaDAO) {
+        this.disciplinaDAO = disciplinaDAO;
+    }
+
+    public void setCursoDAO(CursoDAO cursoDAO) {
+        this.cursoDAO = cursoDAO;
+    }
     
     public Disciplina criarDisciplina(String codigoDisciplina, String nome, Curso curso) throws InstanceAlreadyExistsException {
         if (disciplinaDAO.findByCodigo(codigoDisciplina).isEmpty()) {

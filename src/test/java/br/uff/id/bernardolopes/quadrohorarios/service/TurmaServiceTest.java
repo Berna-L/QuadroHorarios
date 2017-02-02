@@ -5,17 +5,21 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.service;
 
+import br.com.six2six.fixturefactory.Fixture;
+import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import br.uff.id.bernardolopes.quadrohorarios.exception.InstanceAlreadyExistsException;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,10 +33,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TurmaServiceTest {
 
-    @Autowired
     private TurmaDAO turmaDAO;
 
-    @Autowired
     private DisciplinaDAO disciplinaDAO;
 
     @Autowired
@@ -47,33 +49,52 @@ public class TurmaServiceTest {
     private static final String CODIGO_DISCIPLINA = "GMA00108";
     private static final String CODIGO_DISCIPLINA_INEXISTENTE = "TES99999";
 
+    @Before
+    public void setUp() {
+        turmaDAO = mock(TurmaDAO.class);
+        disciplinaDAO = mock(DisciplinaDAO.class);
+        service.setTurmaDAO(turmaDAO);
+        service.setDisciplinaDAO(disciplinaDAO);
+        FixtureFactoryLoader.loadTemplates("br.uff.id.bernardolopes.quadrohorarios.template");
+    }
+
     @Test
     public void insereNoBancoComObjetoDisciplina() {
-        long size = turmaDAO.count();
-        Disciplina d = disciplinaDAO.findByCodigo(CODIGO_DISCIPLINA).get(0);
+        Disciplina d = Fixture.from(Disciplina.class).gimme("valido");
         Turma t = service.criarTurma(CODIGO_TURMA, d);
         assertEquals(CODIGO_TURMA, t.getCodigo());
         assertEquals(d, t.getDisciplina());
-        assertEquals(size + 1, turmaDAO.count());
+        verify(turmaDAO).findByCodigoAndDisciplina(CODIGO_TURMA, d);
+        verify(turmaDAO).save(t);
     }
 
     @Test
     public void insereNoBancoComCodigoDisciplina() {
-        long size = turmaDAO.count();
-        Turma t = service.criarTurma(CODIGO_TURMA_2, CODIGO_DISCIPLINA);
+        Disciplina d = Fixture.from(Disciplina.class).gimme("valido");
+        List<Disciplina> mockList = mock(List.class);
+        when(mockList.get(0)).thenReturn(d);
+        when(disciplinaDAO.findByCodigo(d.getCodigo())).thenReturn(mockList);
+        Turma t = service.criarTurma(CODIGO_TURMA_2, d.getCodigo());
         assertEquals(CODIGO_TURMA_2, t.getCodigo());
-        assertEquals(CODIGO_DISCIPLINA, t.getDisciplina().getCodigo());
-        assertEquals(size + 1, turmaDAO.count());
+        assertEquals(d.getCodigo(), t.getDisciplina().getCodigo());
     }
 
     @Test(expected = InstanceAlreadyExistsException.class)
     public void insereNoBancoJaExiste() {
-        service.criarTurma(CODIGO_TURMA_EXISTENTE, CODIGO_DISCIPLINA_EXISTENTE);
+        Disciplina d = Fixture.from(Disciplina.class).gimme("valido");
+        List<Turma> mockList = mock(List.class);
+        when(turmaDAO.findByCodigoAndDisciplina(CODIGO_TURMA, d)).thenReturn(mockList);
+        when(mockList.isEmpty()).thenReturn(Boolean.FALSE);
+        service.criarTurma(CODIGO_TURMA, d);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void insereNoBancoComCodigoNuloDaErro() {
-        service.criarTurma(null, CODIGO_DISCIPLINA);
+        Disciplina d = Fixture.from(Disciplina.class).gimme("valido");
+        List<Disciplina> mockList = mock(List.class);
+        when(mockList.get(0)).thenReturn(d);
+        when(disciplinaDAO.findByCodigo(d.getCodigo())).thenReturn(mockList);
+        service.criarTurma(null, d.getCodigo());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -83,6 +104,9 @@ public class TurmaServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void insereNoBancoComDisciplinaInexistenteDaErro() {
+        List<Disciplina> mockList = mock(List.class);
+        when(mockList.get(0)).thenReturn(null);
+            when(disciplinaDAO.findByCodigo(CODIGO_DISCIPLINA_INEXISTENTE)).thenReturn(mockList);
         service.criarTurma(CODIGO_TURMA, CODIGO_DISCIPLINA_INEXISTENTE);
     }
 }

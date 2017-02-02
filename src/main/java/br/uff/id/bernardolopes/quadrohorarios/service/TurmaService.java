@@ -30,6 +30,14 @@ public class TurmaService {
     public TurmaService() {
     }
 
+    public void setTurmaDAO(TurmaDAO turmaDAO) {
+        this.turmaDAO = turmaDAO;
+    }
+
+    public void setDisciplinaDAO(DisciplinaDAO disciplinaDAO) {
+        this.disciplinaDAO = disciplinaDAO;
+    }
+    
     public Turma criarTurma(String codigoTurma, Disciplina disciplina) throws InstanceAlreadyExistsException {
         if (turmaDAO.findByCodigoAndDisciplina(codigoTurma, disciplina).isEmpty()) {
             if (codigoTurma == null) {
