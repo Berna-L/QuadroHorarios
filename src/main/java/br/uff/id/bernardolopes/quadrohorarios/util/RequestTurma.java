@@ -18,6 +18,9 @@ public class RequestTurma implements Serializable {
     
     private String codigoDisciplina;
 
+    private String anosemestre;
+    
+    
     public RequestTurma() {
     }
 
@@ -41,5 +44,14 @@ public class RequestTurma implements Serializable {
         return codigoTurma != null && codigoDisciplina != null;
     }
 
+    public String getAnosemestre() {
+        return anosemestre;
+    }
+
+    public void setAnosemestre(String anosemestre) {
+        this.anosemestre = anosemestre;
+    }
+
+        
     
 }

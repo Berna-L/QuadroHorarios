@@ -25,14 +25,18 @@ public class Turma implements Serializable {
     
     private String codigo;
     
+    private String anosemestre;
+    
     @ManyToOne
     private Disciplina disciplina;
+    
 
     public Turma() {
     }
     
-    public Turma(String codigo, Disciplina disciplina) {
+    public Turma(String codigo, String anosemestre, Disciplina disciplina) {
         this.codigo = codigo;
+        this.anosemestre = anosemestre;
         this.disciplina = disciplina;
     }
 
@@ -46,5 +50,9 @@ public class Turma implements Serializable {
 
     public Disciplina getDisciplina() {
         return disciplina;
+    }
+
+    public String getAnosemestre() {
+        return anosemestre;
     }
 }

@@ -15,6 +15,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author bernardolopes at id.uff.br
  */
 public interface TurmaDAO extends JpaRepository<Turma, Long>{
-        public List<Turma> findByCodigoAndDisciplina(String codigo, Disciplina disciplina);
+        public List<Turma> findByCodigoAndAnosemestreAndDisciplina(String codigo, String anosemestre, Disciplina disciplina);
 
 }

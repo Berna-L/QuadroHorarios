@@ -58,30 +58,33 @@ public class TurmaService {
 
     public Turma criarTurma(RequestTurma request) {
         if (request.isValid()) {
-            return criarTurma(request.getCodigoTurma(), request.getCodigoDisciplina());
+            return criarTurma(request.getCodigoTurma(), request.getAnosemestre(), request.getCodigoDisciplina());
         } else {
             throw new IllegalArgumentException("Requisição inválida!");
         }
     }
 
-    public Turma criarTurma(String codigoTurma, String codigoDisciplina) throws InstanceAlreadyExistsException {
+    public Turma criarTurma(String codigoTurma, String anosemestre, String codigoDisciplina) throws InstanceAlreadyExistsException {
         try {
             Disciplina d = disciplinaDAO.findByCodigo(codigoDisciplina).get(0);
-            return criarTurma(codigoTurma, d);
+            return criarTurma(codigoTurma, anosemestre, d);
         } catch (IndexOutOfBoundsException ex) {
             throw new IllegalArgumentException("Disciplina não encontrada com código " + codigoDisciplina);
         }
     }
 
-    public Turma criarTurma(String codigoTurma, Disciplina disciplina) throws InstanceAlreadyExistsException {
-        if (turmaDAO.findByCodigoAndDisciplina(codigoTurma, disciplina).isEmpty()) { //Se já existe turma com código, não pode criar outra
+    public Turma criarTurma(String codigoTurma, String anosemestre, Disciplina disciplina) throws InstanceAlreadyExistsException {
+        if (turmaDAO.findByCodigoAndAnosemestreAndDisciplina(codigoTurma, anosemestre, disciplina).isEmpty()) { //Se já existe turma com código, não pode criar outra
             if (codigoTurma == null) {
                 throw new IllegalArgumentException("Código da turma não pode ser nulo!");
+            }
+            if (anosemestre == null) {
+                throw new IllegalArgumentException("Anosemestre não pode ser nulo!");
             }
             if (disciplina == null) {
                 throw new IllegalArgumentException("Disciplina não pode ser nulo!");
             }
-            Turma t = new Turma(codigoTurma, disciplina);
+            Turma t = new Turma(codigoTurma, anosemestre, disciplina);
             turmaDAO.save(t);
             return t;
         } else {
