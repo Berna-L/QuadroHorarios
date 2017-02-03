@@ -13,6 +13,7 @@ import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.repository.CursoDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
+import br.uff.id.bernardolopes.quadrohorarios.util.RequestDisciplina;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -48,8 +49,9 @@ public class DisciplinaServiceTest {
 
     private static final String CODIGO_DISCIPLINA_2 = "TES42424";
     private static final String NOME_DISCIPLINA_2 = "Testes de Universo";
-    ;
+    
     private static final long CODIGO_CURSO_INEXISTENTE = 0L;
+    private static final long CODIGO_CURSO_QUALQUER = 10L;
 
     @Before
     public void setUp() {
@@ -60,50 +62,98 @@ public class DisciplinaServiceTest {
         FixtureFactoryLoader.loadTemplates("br.uff.id.bernardolopes.quadrohorarios.template");
     }
 
+    //Testes para casos OK
     @Test
     public void insereNoBancoComObjetoCurso() {
+        //Criação por fixture
         Curso c = Fixture.from(Curso.class).gimme("valido");
+        //Hora do show
         Disciplina d = service.criarDisciplina(CODIGO_DISCIPLINA, NOME_DISCIPLINA, c);
+        //Asserções de valor
         assertEquals(CODIGO_DISCIPLINA, d.getCodigo());
         assertEquals(NOME_DISCIPLINA, d.getNome());
         assertEquals(c, d.getCurso());
+        //Verificação de chamadas
         verify(disciplinaDAO).findByCodigo(CODIGO_DISCIPLINA);
         verify(disciplinaDAO).save(d);
     }
 
     @Test
     public void insereNoBancoComCodigoCurso() {
+        //Criação por fixture
         Curso c = Fixture.from(Curso.class).gimme("valido");
+        //Configuração do mock
         when(cursoDAO.findOne(c.getCodigo())).thenReturn(c);
+        //Hora do show
         Disciplina d = service.criarDisciplina(CODIGO_DISCIPLINA, NOME_DISCIPLINA, c.getCodigo());
+        //Asserções de valor
         assertEquals(CODIGO_DISCIPLINA, d.getCodigo());
         assertEquals(NOME_DISCIPLINA, d.getNome());
         assertEquals(c.getCodigo(), d.getCurso().getCodigo());
+        //Verificação de chamadas
         verify(cursoDAO).findOne(c.getCodigo());
         verify(disciplinaDAO).findByCodigo(CODIGO_DISCIPLINA);
         verify(disciplinaDAO).save(d);
     }
 
+    @Test
+    public void insereNoBancoComRequest() {
+        //Criação por fixture
+        Curso c = Fixture.from(Curso.class).gimme("valido");
+        //Criação do mock
+        RequestDisciplina request = mock(RequestDisciplina.class);
+        //Configuração do mock request
+        when(request.getCodigoCurso()).thenReturn(c.getCodigo());
+        when(request.getCodigoDisciplina()).thenReturn(CODIGO_DISCIPLINA);
+        when(request.getNome()).thenReturn(NOME_DISCIPLINA);
+        when(request.isValid()).thenReturn(Boolean.TRUE);
+        //Configuração do mock cursoDAO
+        when(cursoDAO.findOne(c.getCodigo())).thenReturn(c);
+        //Hora do show
+        Disciplina d = service.criarDisciplina(request);
+        //Asserções de valor
+        assertEquals(CODIGO_DISCIPLINA, d.getCodigo());
+        assertEquals(NOME_DISCIPLINA, d.getNome());
+        assertEquals(c.getCodigo(), d.getCurso().getCodigo());
+        //Verificação de chamadas
+        verify(cursoDAO).findOne(c.getCodigo());
+        verify(request).isValid();
+        verify(disciplinaDAO).findByCodigo(CODIGO_DISCIPLINA);
+        verify(disciplinaDAO).save(d);
+    }
+
+    //Testes de exceção
     @Test(expected = InstanceAlreadyExistsException.class)
     public void insereNoBancoJaExiste() {
+        //Criação por fixture
         Curso c = Fixture.from(Curso.class).gimme("valido");
+        //Criação de mock
         List<Disciplina> mockList = mock(List.class);
+        //Configuração do mock disciplinaDAO
         when(disciplinaDAO.findByCodigo(CODIGO_DISCIPLINA)).thenReturn(mockList);
+        //Configuração do mock mockList
         when(mockList.isEmpty()).thenReturn(Boolean.FALSE);
+        //Exceção aqui
         service.criarDisciplina(CODIGO_DISCIPLINA, NOME_DISCIPLINA, c);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void insereNoBancoComCodigoNuloDaErro() {
+        //Criação por fixture
         Curso c = Fixture.from(Curso.class).gimme("valido");
+        //Configuração do mock
         when(cursoDAO.findOne(c.getCodigo())).thenReturn(c);
+        //Exceção aqui
         service.criarDisciplina(null, NOME_DISCIPLINA, c.getCodigo());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void insereNoBancoComNomeNuloDaErro() {
+        //Criação por fixture
         Curso c = Fixture.from(Curso.class).gimme("valido");
+        //Configuração do mock
         when(cursoDAO.findOne(c.getCodigo())).thenReturn(c);
+        //Exceção aqui
         service.criarDisciplina(CODIGO_DISCIPLINA, null, c.getCodigo());
     }
 
@@ -114,7 +164,19 @@ public class DisciplinaServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void insereNoBancoComCursoInexistenteDaErro() {
+        //Configuração do mock
         when(cursoDAO.findOne(CODIGO_CURSO_INEXISTENTE)).thenReturn(null);
+        //Exceção aqui
         service.criarDisciplina(CODIGO_DISCIPLINA, NOME_DISCIPLINA, CODIGO_CURSO_INEXISTENTE);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void insereNoBancoComRequestInvalidoDaErro() {
+        //Criação do mock
+        RequestDisciplina request = mock(RequestDisciplina.class);
+        //Configuração do mock
+        when(request.isValid()).thenReturn(Boolean.FALSE);
+        //Exceção aqui
+        service.criarDisciplina(request);
     }
 }
