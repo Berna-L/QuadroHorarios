@@ -10,6 +10,7 @@ import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.repository.CursoDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
+import br.uff.id.bernardolopes.quadrohorarios.util.RequestDisciplina;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -46,6 +47,22 @@ public class DisciplinaService {
         return disciplinaDAO.findAll();
     }
     
+    public Disciplina criarDisciplina(RequestDisciplina request){
+        if (request.isValid()){
+            return criarDisciplina(request.getCodigoDisciplina(), request.getNome(), request.getCodigoCurso());
+        } else {
+            throw new IllegalArgumentException("Requisição inválida!");
+        }
+    }
+
+    public Disciplina criarDisciplina(String codigoDisciplina, String nome, Long codigoCurso) throws InstanceAlreadyExistsException {
+        Curso curso = cursoDAO.findOne(codigoCurso);
+        if (curso == null){
+            throw new IllegalArgumentException("Curso não encontrado com código " + codigoCurso);
+        }
+        return criarDisciplina(codigoDisciplina, nome, curso);
+    }
+    
     public Disciplina criarDisciplina(String codigoDisciplina, String nome, Curso curso) throws InstanceAlreadyExistsException {
         if (disciplinaDAO.findByCodigo(codigoDisciplina).isEmpty()) { //Se já existe disciplina com código, não pode criar outra
             if (codigoDisciplina == null){
@@ -66,11 +83,4 @@ public class DisciplinaService {
 
     }
 
-    public Disciplina criarDisciplina(String codigoDisciplina, String nome, Long codigoCurso) throws InstanceAlreadyExistsException {
-        Curso curso = cursoDAO.findOne(codigoCurso);
-        if (curso == null){
-            throw new IllegalArgumentException("Curso não encontrado com código " + codigoCurso);
-        }
-        return criarDisciplina(codigoDisciplina, nome, curso);
-    }
 }

@@ -13,6 +13,7 @@ import br.uff.id.bernardolopes.quadrohorarios.model.VagaTurmaCurso;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
+import br.uff.id.bernardolopes.quadrohorarios.util.RequestTurma;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,9 +51,26 @@ public class TurmaService {
     public void setDisciplinaDAO(DisciplinaDAO disciplinaDAO) {
         this.disciplinaDAO = disciplinaDAO;
     }
-    
-    public List<Turma> getTurmas(){
+
+    public List<Turma> getTurmas() {
         return turmaDAO.findAll();
+    }
+
+    public Turma criarTurma(RequestTurma request) {
+        if (request.isValid()) {
+            return criarTurma(request.getCodigoTurma(), request.getCodigoDisciplina());
+        } else {
+            throw new IllegalArgumentException("Requisição inválida!");
+        }
+    }
+
+    public Turma criarTurma(String codigoTurma, String codigoDisciplina) throws InstanceAlreadyExistsException {
+        try {
+            Disciplina d = disciplinaDAO.findByCodigo(codigoDisciplina).get(0);
+            return criarTurma(codigoTurma, d);
+        } catch (IndexOutOfBoundsException ex) {
+            throw new IllegalArgumentException("Disciplina não encontrada com código " + codigoDisciplina);
+        }
     }
 
     public Turma criarTurma(String codigoTurma, Disciplina disciplina) throws InstanceAlreadyExistsException {
@@ -72,17 +90,8 @@ public class TurmaService {
 
     }
 
-    public Turma criarTurma(String codigoTurma, String codigoDisciplina) throws InstanceAlreadyExistsException {
-        try {
-            Disciplina d = disciplinaDAO.findByCodigo(codigoDisciplina).get(0);
-            return criarTurma(codigoTurma, d);
-        } catch (IndexOutOfBoundsException ex) {
-            throw new IllegalArgumentException("Disciplina não encontrada com código " + codigoDisciplina);
-        }
-    }
-
     public Map<Curso, Integer> getVagasPorCurso(Turma turma) {
-        if (turma == null){
+        if (turma == null) {
             throw new IllegalArgumentException("Turma não pode ser nulo!");
         }
         List<VagaTurmaCurso> lista = vagaTurmaCursoDAO.findByTurma(turma);

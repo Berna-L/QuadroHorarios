@@ -5,11 +5,18 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios;
 
+import br.uff.id.bernardolopes.quadrohorarios.exception.InstanceAlreadyExistsException;
+import br.uff.id.bernardolopes.quadrohorarios.exception.information.InstanceAlreadyExistsInformation;
 import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  *
@@ -22,6 +29,14 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
+    }
+ 
+    @ExceptionHandler(InstanceAlreadyExistsException.class)
+    public ResponseEntity<InstanceAlreadyExistsInformation>
+        instanceAlreadyExistsExceptionHandler(HttpServletRequest request,
+                Exception ex){
+        InstanceAlreadyExistsInformation info = new InstanceAlreadyExistsInformation(ex.toString(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(info);
     }
     
 }

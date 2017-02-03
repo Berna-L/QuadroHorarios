@@ -41,29 +41,12 @@ public class TurmaController {
     public ResponseEntity<List<Turma>> getTurmas() {
         return ResponseEntity.ok().body(service.getTurmas());
     }
-    
+
     @Transactional
     @PostMapping(path = "/turmas")
     public ResponseEntity<Turma> criarTurma(
-            @RequestBody RequestTurma request, HttpServletResponse response) {
-        if (request.isValid()) {
-            Turma t;
-            try {
-                t = service.criarTurma(request.getCodigoTurma(), request.getCodigoDisciplina());
-            } catch (InstanceAlreadyExistsException ex) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-            }
-            if (t != null) {
-                try {
-                    return ResponseEntity.created(new URI("/turmas/" + t.getId())).body(t);
-                } catch (URISyntaxException ex) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-                }
-            } else {
-                return ResponseEntity.badRequest().body(null);
-            }
-        } else {
-            return ResponseEntity.badRequest().body(null);
-        }
+            @RequestBody RequestTurma request, HttpServletResponse response) throws URISyntaxException {
+        Turma t = service.criarTurma(request);
+        return ResponseEntity.created(new URI("/turmas/" + t.getId())).body(t);
     }
 }

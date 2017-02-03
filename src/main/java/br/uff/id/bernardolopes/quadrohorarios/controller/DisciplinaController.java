@@ -38,40 +38,22 @@ import org.springframework.web.client.RestTemplate;
  *
  * @author bernardolopes at id.uff.br
  */
-
 @RestController
 public class DisciplinaController {
-    
+
     @Autowired
     private DisciplinaService service;
-    
+
     @GetMapping(path = "/disciplinas")
-    public ResponseEntity<List<Disciplina>> getDisciplinas(){
+    public ResponseEntity<List<Disciplina>> getDisciplinas() {
         return ResponseEntity.ok().body(service.getDisciplinas());
     }
-    
+
     @Transactional
     @PostMapping(path = "/disciplinas")
     public ResponseEntity<Disciplina> criarDisciplina(
-            @RequestBody RequestDisciplina request, HttpServletResponse response){
-        if (request.isValid()){
-            Disciplina d;
-            try{
-                d = service.criarDisciplina(request.getCodigoDisciplina(), request.getNome(), request.getCodigoCurso());
-            } catch (InstanceAlreadyExistsException ex){
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);                
-            }
-            if (d != null){
-                try {
-                    return ResponseEntity.created(new URI("/disciplinas/" + d.getId())).body(d);
-                } catch (URISyntaxException ex) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-                }
-            } else {
-                return ResponseEntity.badRequest().body(null);
-            }
-        } else {
-            return ResponseEntity.badRequest().body(null);
-        }
+            @RequestBody RequestDisciplina request, HttpServletResponse response) throws URISyntaxException {
+        Disciplina d = service.criarDisciplina(request);
+        return ResponseEntity.created(new URI("/disciplinas/" + d.getId())).body(d);
     }
 }
