@@ -34,6 +34,10 @@ public class AlunoRequesterService {
         this.mapper = mapper;
     }
     
+    public void setMapper(ObjectMapper mapper){
+        this.mapper = mapper;
+    }
+    
     public Map<Curso, List<Aluno>> getListaAlunosPorCursoEmTurma(Turma turma) throws MalformedURLException, ProtocolException, IOException {
         URL url = new URL(REST_URL + turma.getId());
         return getListaAlunosPorCursoEmTurma(turma, url);
