@@ -44,12 +44,13 @@ public class DisciplinaServiceTest {
     @Autowired
     private DisciplinaService service;
 
+    private static final long ID_DISCIPLINA = 1L;
     private static final String CODIGO_DISCIPLINA = "TES40404";
     private static final String NOME_DISCIPLINA = "Testes de Configuração";
 
     private static final String CODIGO_DISCIPLINA_2 = "TES42424";
     private static final String NOME_DISCIPLINA_2 = "Testes de Universo";
-    
+
     private static final long CODIGO_CURSO_INEXISTENTE = 0L;
     private static final long CODIGO_CURSO_QUALQUER = 10L;
 
@@ -60,6 +61,38 @@ public class DisciplinaServiceTest {
         service.setDisciplinaDAO(disciplinaDAO);
         service.setCursoDAO(cursoDAO);
         FixtureFactoryLoader.loadTemplates("br.uff.id.bernardolopes.quadrohorarios.template");
+    }
+
+    /*Obtenção de disciplinas
+    Testes para casos OK*/
+    @Test
+    public void getDisciplinasOK() {
+        //Criação por fixture
+        List<Disciplina> disciplinasEsperadas = Fixture.from(Disciplina.class).gimme(5, "valido");
+        //Configuração do mock
+        when(disciplinaDAO.findAll()).thenReturn(disciplinasEsperadas);
+        //Hora do show
+        List<Disciplina> turmas = service.getDisciplinas();
+        //Asserções de valor
+        assertEquals(disciplinasEsperadas, turmas);
+        //Verificação de chamadas
+        verify(disciplinaDAO).findAll();
+    }
+
+    /*Obtenção de uma disciplina
+    Testes para casos OK*/
+    @Test
+    public void getDisciplinaOK() {
+        //Criação do mock
+        Disciplina turmaEsperada = mock(Disciplina.class);
+        //Configuração do mock disciplinaDAO
+        when(disciplinaDAO.findOne(ID_DISCIPLINA)).thenReturn(turmaEsperada);
+        //Hora do show
+        Disciplina turma = service.getDisciplina(ID_DISCIPLINA);
+        //Asserções de valor
+        assertEquals(turmaEsperada, turma);
+        //Verificação de chamadas
+        verify(disciplinaDAO).findOne(ID_DISCIPLINA);
     }
 
     //Testes para casos OK
@@ -159,7 +192,7 @@ public class DisciplinaServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void insereNoBancoComCursoNuloDaErro() {
-        service.criarDisciplina(null, NOME_DISCIPLINA, (Curso) null);
+        service.criarDisciplina(CODIGO_DISCIPLINA, NOME_DISCIPLINA, (Curso) null);
     }
 
     @Test(expected = IllegalArgumentException.class)

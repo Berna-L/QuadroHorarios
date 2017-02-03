@@ -55,6 +55,10 @@ public class TurmaService {
     public List<Turma> getTurmas() {
         return turmaDAO.findAll();
     }
+    
+    public Turma getTurma(long id) {
+        return turmaDAO.findOne(id);
+    }
 
     public Turma criarTurma(RequestTurma request) {
         if (request.isValid()) {

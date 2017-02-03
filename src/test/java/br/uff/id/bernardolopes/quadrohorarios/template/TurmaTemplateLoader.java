@@ -22,7 +22,7 @@ public class TurmaTemplateLoader implements TemplateLoader {
         Fixture.of(Turma.class).addTemplate("valido", new Rule() {
             {
                 add("codigo", regex("[A-Z]{1}[0-9]{1}"));
-                add("anosemestre", regex("201[0-6]_[1-2]"));
+                add("anosemestre", regex("2016_1"));
                 add("disciplina", one(Disciplina.class, "valido"));
             }
         });

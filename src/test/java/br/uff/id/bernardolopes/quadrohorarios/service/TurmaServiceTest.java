@@ -47,6 +47,7 @@ public class TurmaServiceTest {
     @Autowired
     private TurmaService service;
 
+    private static final long ID_TURMA = 1L;
     private static final String CODIGO_TURMA = "T1";
     private static final String ANOSEMESTRE = "2017_1";
 
@@ -61,6 +62,39 @@ public class TurmaServiceTest {
         service.setVagaTurmaCursoDAO(vagaTurmaCursoDAO);
         service.setDisciplinaDAO(disciplinaDAO);
         FixtureFactoryLoader.loadTemplates("br.uff.id.bernardolopes.quadrohorarios.template");
+    }
+
+    /*Obtenção de turmas
+    Testes para casos OK*/
+    @Test
+    public void getTurmasOK() {
+        //Criação por fixture
+        List<Turma> turmasEsperadas = Fixture.from(Turma.class).gimme(5, "valido");
+        //Configuração do mock
+        when(turmaDAO.findAll()).thenReturn(turmasEsperadas);
+        //Hora do show
+        List<Turma> turmas = service.getTurmas();
+        //Asserções de valor
+        assertEquals(turmasEsperadas, turmas);
+        //Verificação de chamadas
+        verify(turmaDAO).findAll();
+    }
+    
+    /*Obtenção de uma turma
+    Testes para casos OK*/
+    
+    @Test
+    public void getTurmaOK(){
+        //Criação do mock
+        Turma turmaEsperada = mock(Turma.class);
+        //Configuração do mock turmaDAO
+        when(turmaDAO.findOne(ID_TURMA)).thenReturn(turmaEsperada);
+        //Hora do show
+        Turma turma = service.getTurma(ID_TURMA);
+        //Asserções de valor
+        assertEquals(turmaEsperada, turma);
+        //Verificação de chamadas
+        verify(turmaDAO).findOne(ID_TURMA);
     }
 
     /* Criação de turma
@@ -184,12 +218,23 @@ public class TurmaServiceTest {
         //Criação de mock
         List<Disciplina> mockList = mock(List.class);
         //Configuração do mock mockList
-        when(mockList.get(0)).thenReturn(null);
+        when(mockList.get(0)).thenThrow(IndexOutOfBoundsException.class);
         //Configuração do mock disciplinaDAO
         when(disciplinaDAO.findByCodigo(CODIGO_DISCIPLINA_INEXISTENTE)).thenReturn(mockList);
         //Exceção aqui
         service.criarTurma(CODIGO_TURMA, ANOSEMESTRE, CODIGO_DISCIPLINA_INEXISTENTE);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void insereNoBancoComRequestInvalidoDaErro() {
+        //Criação do mock
+        RequestTurma request = mock(RequestTurma.class);
+        //Configuração do mock
+        when(request.isValid()).thenReturn(Boolean.FALSE);
+        //Exceção aqui
+        service.criarTurma(request);
+    }
+
 
     /* Obtenção de vagas
     Testes para casos OK*/

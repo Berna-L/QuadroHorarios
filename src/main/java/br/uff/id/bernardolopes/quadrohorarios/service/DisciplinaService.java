@@ -47,6 +47,10 @@ public class DisciplinaService {
         return disciplinaDAO.findAll();
     }
     
+    public Disciplina getDisciplina(long id){
+        return disciplinaDAO.findOne(id);
+    }
+    
     public Disciplina criarDisciplina(RequestDisciplina request){
         if (request.isValid()){
             return criarDisciplina(request.getCodigoDisciplina(), request.getNome(), request.getCodigoCurso());

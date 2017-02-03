@@ -49,6 +49,11 @@ public class DisciplinaController {
         return ResponseEntity.ok().body(service.getDisciplinas());
     }
 
+    @GetMapping(path = {"/disciplinas/{id}", "/disciplina/{id}"})
+    public ResponseEntity<Disciplina> getDisciplina(long id){
+        return ResponseEntity.ok().body(service.getDisciplina(id));
+    }
+    
     @Transactional
     @PostMapping(path = "/disciplinas")
     public ResponseEntity<Disciplina> criarDisciplina(
@@ -56,4 +61,7 @@ public class DisciplinaController {
         Disciplina d = service.criarDisciplina(request);
         return ResponseEntity.created(new URI("/disciplinas/" + d.getId())).body(d);
     }
+    
+    
+    
 }
