@@ -16,6 +16,7 @@ import br.uff.id.bernardolopes.quadrohorarios.util.RequestDisciplina;
 import br.uff.id.bernardolopes.quadrohorarios.util.RequestTurma;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class TurmaController {
     @Autowired
     private TurmaService service;
 
+    @GetMapping(path = "/turmas")
+    public ResponseEntity<List<Turma>> getTurmas() {
+        return ResponseEntity.ok().body(service.getTurmas());
+    }
+    
     @Transactional
     @PostMapping(path = "/turmas")
     public ResponseEntity<Turma> criarTurma(

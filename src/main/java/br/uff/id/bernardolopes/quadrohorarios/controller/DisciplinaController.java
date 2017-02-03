@@ -15,6 +15,7 @@ import br.uff.id.bernardolopes.quadrohorarios.util.RequestDisciplina;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,9 +45,13 @@ public class DisciplinaController {
     @Autowired
     private DisciplinaService service;
     
+    @GetMapping(path = "/disciplinas")
+    public ResponseEntity<List<Disciplina>> getDisciplinas(){
+        return ResponseEntity.ok().body(service.getDisciplinas());
+    }
+    
     @Transactional
-    @ResponseBody
-    @RequestMapping(path = "/disciplinas", method = RequestMethod.POST)
+    @PostMapping(path = "/disciplinas")
     public ResponseEntity<Disciplina> criarDisciplina(
             @RequestBody RequestDisciplina request, HttpServletResponse response){
         if (request.isValid()){

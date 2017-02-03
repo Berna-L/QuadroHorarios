@@ -50,6 +50,10 @@ public class TurmaService {
     public void setDisciplinaDAO(DisciplinaDAO disciplinaDAO) {
         this.disciplinaDAO = disciplinaDAO;
     }
+    
+    public List<Turma> getTurmas(){
+        return turmaDAO.findAll();
+    }
 
     public Turma criarTurma(String codigoTurma, Disciplina disciplina) throws InstanceAlreadyExistsException {
         if (turmaDAO.findByCodigoAndDisciplina(codigoTurma, disciplina).isEmpty()) { //Se já existe turma com código, não pode criar outra
