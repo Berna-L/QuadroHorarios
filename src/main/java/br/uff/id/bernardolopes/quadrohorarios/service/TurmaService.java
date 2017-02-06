@@ -32,9 +32,6 @@ public class TurmaService {
     private TurmaDAO turmaDAO;
 
     @Autowired
-    private VagaTurmaCursoDAO vagaTurmaCursoDAO;
-
-    @Autowired
     private DisciplinaDAO disciplinaDAO;
 
     public TurmaService() {
@@ -44,9 +41,6 @@ public class TurmaService {
         this.turmaDAO = turmaDAO;
     }
 
-    public void setVagaTurmaCursoDAO(VagaTurmaCursoDAO vagaTurmaCursoDAO) {
-        this.vagaTurmaCursoDAO = vagaTurmaCursoDAO;
-    }
 
     public void setDisciplinaDAO(DisciplinaDAO disciplinaDAO) {
         this.disciplinaDAO = disciplinaDAO;
@@ -95,27 +89,5 @@ public class TurmaService {
             throw new InstanceAlreadyExistsException();
         }
 
-    }
-
-    public Map<Curso, Integer> getVagasPorCurso(Turma turma) {
-        if (turma == null) {
-            throw new IllegalArgumentException("Turma não pode ser nulo!");
-        }
-        List<VagaTurmaCurso> lista = vagaTurmaCursoDAO.findByTurma(turma);
-        Map<Curso, Integer> relacaoVagas = new HashMap<>();
-        for (VagaTurmaCurso entrada : lista) {
-            relacaoVagas.put(entrada.getCurso(), entrada.getVagas());
-        }
-        return relacaoVagas;
-    }
-
-    public Map<Curso, Integer> fakeGetInscritosPorCurso(Turma turma) {
-        //NOTHING IS REAL ANYMORE
-        Map<Curso, Integer> relacaoVagas = getVagasPorCurso(turma);
-        Map<Curso, Integer> relacaoInscritos = new HashMap<>();
-        for (Curso curso : relacaoVagas.keySet()) {
-            relacaoInscritos.put(curso, (int) Math.floor(Math.random() * relacaoVagas.get(curso).doubleValue()));
-        }
-        return relacaoInscritos;
     }
 }

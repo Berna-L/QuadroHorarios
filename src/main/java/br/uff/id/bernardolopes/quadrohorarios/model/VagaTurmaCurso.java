@@ -28,8 +28,7 @@ public class VagaTurmaCurso implements Serializable {
     public VagaTurmaCurso() {
     }
 
-    public VagaTurmaCurso(long id, Turma turma, Curso curso, int vagas) {
-        this.id = id;
+    public VagaTurmaCurso(Turma turma, Curso curso, int vagas) {
         this.turma = turma;
         this.curso = curso;
         this.vagas = vagas;

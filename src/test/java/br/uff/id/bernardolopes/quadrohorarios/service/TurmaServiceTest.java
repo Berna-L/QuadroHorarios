@@ -59,7 +59,6 @@ public class TurmaServiceTest {
         vagaTurmaCursoDAO = mock(VagaTurmaCursoDAO.class);
         disciplinaDAO = mock(DisciplinaDAO.class);
         service.setTurmaDAO(turmaDAO);
-        service.setVagaTurmaCursoDAO(vagaTurmaCursoDAO);
         service.setDisciplinaDAO(disciplinaDAO);
         FixtureFactoryLoader.loadTemplates("br.uff.id.bernardolopes.quadrohorarios.template");
     }
@@ -236,29 +235,4 @@ public class TurmaServiceTest {
     }
 
 
-    /* Obtenção de vagas
-    Testes para casos OK*/
-    @Test
-    public void getVagasPorTurmaOK() {
-        //Criação por fixture
-        Turma t = Fixture.from(Turma.class).gimme("turma-disciplina-fixas");
-        List<VagaTurmaCurso> listaEsperada = Fixture.from(VagaTurmaCurso.class).gimme(15, "turma-disciplina-fixas");
-        //Configuração do mock
-        when(vagaTurmaCursoDAO.findByTurma(t)).thenReturn(listaEsperada);
-        //Hora do show
-        Map<Curso, Integer> mapa = service.getVagasPorCurso(t);
-        //Asserções de valor
-        for (VagaTurmaCurso vtc : listaEsperada) {
-            assertEquals(vtc.getVagas(), (long) mapa.get(vtc.getCurso()));
-        }
-        //Verificação de chamadas
-        verify(vagaTurmaCursoDAO).findByTurma(t);
-    }
-
-    /* Criação de turma
-    Testes para exceções*/
-    @Test(expected = IllegalArgumentException.class)
-    public void getVagasPorTurmaComNuloDaErro() {
-        service.getVagasPorCurso(null);
-    }
 }

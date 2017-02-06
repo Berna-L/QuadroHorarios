@@ -5,6 +5,7 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.repository;
 
+import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
 import br.uff.id.bernardolopes.quadrohorarios.model.VagaTurmaCurso;
 import java.io.Serializable;
@@ -17,4 +18,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface VagaTurmaCursoDAO extends JpaRepository<VagaTurmaCurso, Long>{
     public List<VagaTurmaCurso> findByTurma(Turma turma);
+    
+    public List<VagaTurmaCurso> findByTurmaAndCurso(Turma turma, Curso curso);
 }
