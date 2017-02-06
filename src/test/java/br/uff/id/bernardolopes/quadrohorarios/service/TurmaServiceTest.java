@@ -15,7 +15,7 @@ import br.uff.id.bernardolopes.quadrohorarios.model.VagaTurmaCurso;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
-import br.uff.id.bernardolopes.quadrohorarios.util.RequestTurma;
+import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestTurma;
 import java.util.List;
 import java.util.Map;
 import org.junit.After;

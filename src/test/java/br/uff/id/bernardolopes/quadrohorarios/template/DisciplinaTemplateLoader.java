@@ -10,6 +10,7 @@ import br.com.six2six.fixturefactory.Rule;
 import br.com.six2six.fixturefactory.loader.TemplateLoader;
 import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
+import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestDisciplina;
 
 /**
  *
@@ -33,6 +34,12 @@ public class DisciplinaTemplateLoader implements TemplateLoader {
                 add("curso", one(Curso.class, "valido"));
             }
         });
+        
+        Fixture.of(RequestDisciplina.class).addTemplate("valido", new Rule() {
+            {
+                add("codigoDisciplina", regex("TES\\d{5}"));
+                add("nome", regex("Cálculo \\d{3}"));
+            }
+        });
     }
-
 }

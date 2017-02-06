@@ -8,6 +8,7 @@ package br.uff.id.bernardolopes.quadrohorarios.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,7 +24,7 @@ public class Disciplina implements Serializable {
     
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
     
     private String codigo;
     
@@ -45,7 +46,7 @@ public class Disciplina implements Serializable {
         this.curso = curso;
     }
 
-    public Long getId(){
+    public long getId(){
         return id;
     }
     
@@ -60,4 +61,31 @@ public class Disciplina implements Serializable {
     public Curso getCurso() {
         return curso;
     }
+    
+    @Override
+    public boolean equals(Object obj){
+        if (obj == null){
+            return false;
+        }
+        if (obj == this){
+            return true;
+        }
+        if (!(obj instanceof Disciplina)){
+            return false;
+        }
+        if (this == null){
+            System.out.println("Eu sou nulo?!?!?!?!?");
+        }
+        Disciplina other = (Disciplina) obj;
+        return (this.getId() == other.getId() || this.getCodigo().equals(other.getCodigo()));
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + Objects.hashCode(this.id);
+        hash = 67 * hash + Objects.hashCode(this.codigo);
+        return hash;
+    }
+
 }

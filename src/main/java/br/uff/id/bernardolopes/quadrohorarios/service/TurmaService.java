@@ -13,7 +13,7 @@ import br.uff.id.bernardolopes.quadrohorarios.model.VagaTurmaCurso;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
-import br.uff.id.bernardolopes.quadrohorarios.util.RequestTurma;
+import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestTurma;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +61,7 @@ public class TurmaService {
     }
 
     public Turma criarTurma(RequestTurma request) {
-        if (request.isValid()) {
+        if (request != null && request.isValid()) {
             return criarTurma(request.getCodigoTurma(), request.getAnosemestre(), request.getCodigoDisciplina());
         } else {
             throw new IllegalArgumentException("Requisição inválida!");

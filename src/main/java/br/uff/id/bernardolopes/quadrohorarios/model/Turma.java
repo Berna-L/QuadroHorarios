@@ -17,11 +17,11 @@ import javax.persistence.ManyToOne;
  */
 
 @Entity
-public class Turma implements Serializable {
+public class Turma implements Serializable, Comparable<Turma> {
     
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
     
     private String codigo;
     
@@ -40,7 +40,7 @@ public class Turma implements Serializable {
         this.disciplina = disciplina;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
     
@@ -54,5 +54,10 @@ public class Turma implements Serializable {
 
     public String getAnosemestre() {
         return anosemestre;
+    }
+
+    @Override
+    public int compareTo(Turma other) {
+        return (this.getId() == other.getId() || (this.getCodigo() == null ? other.getCodigo() == null : this.getCodigo().equals(other.getCodigo()))) ? 1 : 0;
     }
 }

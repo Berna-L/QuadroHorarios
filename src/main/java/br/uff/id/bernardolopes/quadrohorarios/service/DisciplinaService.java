@@ -10,7 +10,7 @@ import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.repository.CursoDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
-import br.uff.id.bernardolopes.quadrohorarios.util.RequestDisciplina;
+import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestDisciplina;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -84,7 +84,6 @@ public class DisciplinaService {
         } else {
             throw new InstanceAlreadyExistsException();
         }
-
     }
 
 }

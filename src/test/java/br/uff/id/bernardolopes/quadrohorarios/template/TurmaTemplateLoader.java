@@ -10,6 +10,7 @@ import br.com.six2six.fixturefactory.Rule;
 import br.com.six2six.fixturefactory.loader.TemplateLoader;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
+import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestTurma;
 
 /**
  *
@@ -31,6 +32,12 @@ public class TurmaTemplateLoader implements TemplateLoader {
                 add("codigo", "A1");
                 add("anosemestre", regex("2016_2"));
                 add("disciplina", one(Disciplina.class, "turma-disciplina-fixas"));
+            }
+        });
+        Fixture.of(RequestTurma.class).addTemplate("valido", new Rule() {
+            {
+                add("codigoTurma", regex("[A-Z]{1}[0-9]{1}"));
+                add("anosemestre", regex("2016_1"));
             }
         });
     }
