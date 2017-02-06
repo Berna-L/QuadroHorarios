@@ -11,6 +11,7 @@ import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestDisciplina;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -23,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -48,14 +50,17 @@ public class DisciplinaControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void postDisciplinaOK() {
         RequestDisciplina rd = Fixture.from(RequestDisciplina.class).gimme("valido");
         rd.setCodigoCurso(31L);
         ResponseEntity<Disciplina> response = restTemplate.postForEntity("/disciplinas", rd, Disciplina.class);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(rd.getCodigoDisciplina(), response.getBody().getCodigo());
         assertEquals(rd.getNome(), response.getBody().getNome());
         assertEquals(rd.getCodigoCurso(), response.getBody().getCurso().getCodigo());
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+//        response.
     }
 
     @Test

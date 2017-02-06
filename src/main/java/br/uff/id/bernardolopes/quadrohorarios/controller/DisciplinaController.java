@@ -5,34 +5,22 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.controller;
 
-import br.uff.id.bernardolopes.quadrohorarios.exception.InstanceAlreadyExistsException;
-import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
-import br.uff.id.bernardolopes.quadrohorarios.repository.CursoDAO;
-import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.service.DisciplinaService;
 import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestDisciplina;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -41,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 public class DisciplinaController {
 
+    Logger logger = LoggerFactory.getLogger(DisciplinaController.class);
     @Autowired
     private DisciplinaService service;
 
@@ -58,7 +47,9 @@ public class DisciplinaController {
     @PostMapping(path = "/disciplinas")
     public ResponseEntity<Disciplina> criarDisciplina(
             @RequestBody RequestDisciplina request, HttpServletResponse response) throws URISyntaxException {
+        logger.info("TESTE");
         Disciplina d = service.criarDisciplina(request);
+        logger.info("TESTE2");
         return ResponseEntity.created(new URI("/disciplinas/" + d.getId())).body(d);
     }
     

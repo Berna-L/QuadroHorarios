@@ -5,6 +5,10 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeId;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,6 +32,7 @@ public class Turma implements Serializable, Comparable<Turma> {
     private String anosemestre;
     
     @ManyToOne
+    @JsonIgnoreProperties(value = {"codigo", "nome", "curso"})
     private Disciplina disciplina;
     
 

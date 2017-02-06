@@ -15,6 +15,7 @@ import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestDisciplina;
 import java.util.List;
+import javax.transaction.Transactional;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -27,21 +28,21 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  *
  * @author bernardolopes at id.uff.br
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class DisciplinaServiceTest {
 
     private DisciplinaDAO disciplinaDAO;
 
     private CursoDAO cursoDAO;
 
-    @Autowired
     private DisciplinaService service;
 
     private static final long ID_DISCIPLINA = 1L;
@@ -56,6 +57,7 @@ public class DisciplinaServiceTest {
 
     @Before
     public void setUp() {
+        service = new DisciplinaService();
         disciplinaDAO = mock(DisciplinaDAO.class);
         cursoDAO = mock(CursoDAO.class);
         service.setDisciplinaDAO(disciplinaDAO);
@@ -97,6 +99,8 @@ public class DisciplinaServiceTest {
 
     //Testes para casos OK
     @Test
+    @Transactional
+    @Rollback
     public void insereNoBancoComObjetoCurso() {
         //Criação por fixture
         Curso c = Fixture.from(Curso.class).gimme("valido");
@@ -112,6 +116,8 @@ public class DisciplinaServiceTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void insereNoBancoComCodigoCurso() {
         //Criação por fixture
         Curso c = Fixture.from(Curso.class).gimme("valido");
@@ -130,6 +136,8 @@ public class DisciplinaServiceTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void insereNoBancoComRequest() {
         //Criação por fixture
         Curso c = Fixture.from(Curso.class).gimme("valido");

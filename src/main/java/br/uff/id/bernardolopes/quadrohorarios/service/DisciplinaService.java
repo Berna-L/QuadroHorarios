@@ -5,6 +5,7 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.service;
 
+import br.uff.id.bernardolopes.quadrohorarios.controller.DisciplinaController;
 import br.uff.id.bernardolopes.quadrohorarios.exception.InstanceAlreadyExistsException;
 import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
@@ -14,6 +15,8 @@ import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestDisciplina;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DisciplinaService {
 
+     Logger logger = LoggerFactory.getLogger(DisciplinaController.class);
+   
     @Autowired
     private DisciplinaDAO disciplinaDAO;
 
@@ -61,9 +66,12 @@ public class DisciplinaService {
 
     public Disciplina criarDisciplina(String codigoDisciplina, String nome, Long codigoCurso) throws InstanceAlreadyExistsException {
         Curso curso = cursoDAO.findOne(codigoCurso);
+//        logger.info("Curso {}", curso);
+//        logger.info("Curso. {}", curso.getCodigo());
         if (curso == null){
             throw new IllegalArgumentException("Curso não encontrado com código " + codigoCurso);
         }
+//        logger.info("Curso! {}");
         return criarDisciplina(codigoDisciplina, nome, curso);
     }
     

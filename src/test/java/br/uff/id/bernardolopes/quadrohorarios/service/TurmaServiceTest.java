@@ -18,6 +18,7 @@ import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
 import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestTurma;
 import java.util.List;
 import java.util.Map;
+import javax.transaction.Transactional;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -28,23 +29,21 @@ import static org.mockito.Mockito.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  *
  * @author bernardolopes at id.uff.br
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TurmaServiceTest {
 
     private TurmaDAO turmaDAO;
 
-    private VagaTurmaCursoDAO vagaTurmaCursoDAO;
-
     private DisciplinaDAO disciplinaDAO;
 
-    @Autowired
     private TurmaService service;
 
     private static final long ID_TURMA = 1L;
@@ -55,8 +54,8 @@ public class TurmaServiceTest {
 
     @Before
     public void setUp() {
+        service = new TurmaService();
         turmaDAO = mock(TurmaDAO.class);
-        vagaTurmaCursoDAO = mock(VagaTurmaCursoDAO.class);
         disciplinaDAO = mock(DisciplinaDAO.class);
         service.setTurmaDAO(turmaDAO);
         service.setDisciplinaDAO(disciplinaDAO);
@@ -78,12 +77,11 @@ public class TurmaServiceTest {
         //Verificação de chamadas
         verify(turmaDAO).findAll();
     }
-    
+
     /*Obtenção de uma turma
     Testes para casos OK*/
-    
     @Test
-    public void getTurmaOK(){
+    public void getTurmaOK() {
         //Criação do mock
         Turma turmaEsperada = mock(Turma.class);
         //Configuração do mock turmaDAO
@@ -99,6 +97,8 @@ public class TurmaServiceTest {
     /* Criação de turma
     Testes para casos OK*/
     @Test
+    @Transactional
+    @Rollback
     public void insereNoBancoComObjetoDisciplina() {
         //Criação por fixture
         Disciplina d = Fixture.from(Disciplina.class).gimme("valido");
@@ -113,6 +113,8 @@ public class TurmaServiceTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void insereNoBancoComCodigoDisciplina() {
         //Criação por fixture
         Disciplina d = Fixture.from(Disciplina.class).gimme("valido");
@@ -135,6 +137,8 @@ public class TurmaServiceTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void insereNoBancoComRequest() {
         //Criação por fixture
         Disciplina d = Fixture.from(Disciplina.class).gimme("valido");
@@ -233,6 +237,5 @@ public class TurmaServiceTest {
         //Exceção aqui
         service.criarTurma(request);
     }
-
 
 }

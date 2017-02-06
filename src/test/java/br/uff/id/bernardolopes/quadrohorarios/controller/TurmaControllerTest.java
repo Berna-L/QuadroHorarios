@@ -11,6 +11,7 @@ import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
 import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestTurma;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -23,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -48,14 +50,16 @@ public class TurmaControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void postTurmaOK() {
         RequestTurma rt = Fixture.from(RequestTurma.class).gimme("valido");
         rt.setCodigoDisciplina("TCC00173");
         ResponseEntity<Turma> response = restTemplate.postForEntity("/turmas", rt, Turma.class);
-        assertEquals(rt.getCodigoTurma(), response.getBody().getCodigo());
-        assertEquals(rt.getCodigoDisciplina(), response.getBody().getDisciplina().getCodigo());
-        assertEquals(rt.getAnosemestre(), response.getBody().getAnosemestre());
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(rt.getCodigoTurma(), response.getBody().getCodigo());
+        assertEquals(rt.getAnosemestre(), response.getBody().getAnosemestre());
+        assertNotNull(response.getBody().getDisciplina());
     }
 
     @Test
@@ -82,7 +86,7 @@ public class TurmaControllerTest {
         ResponseEntity<Turma> response = restTemplate.postForEntity("/turmas", rt, Turma.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
-    
+
     @Test
     public void postTurmaNuloDaErro() {
         ResponseEntity<Turma> response = restTemplate.postForEntity("/turmas", null, Turma.class);
