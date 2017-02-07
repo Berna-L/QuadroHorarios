@@ -22,9 +22,9 @@ import org.springframework.test.context.junit4.SpringRunner;
  *
  * @author bernardolopes at id.uff.br
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class VagaTurmaCursoControllerTest {
-    
-    
-}
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//public class VagaTurmaCursoControllerTest {
+//    
+//    
+//}
