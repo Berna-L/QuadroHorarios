@@ -9,6 +9,9 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -21,8 +24,10 @@ public class VagaTurmaCurso implements Serializable {
     @GeneratedValue
     private long id;
     
+    @ManyToOne
     private Turma turma;
     
+    @ManyToOne
     private Curso curso;
     
     private int vagas;
