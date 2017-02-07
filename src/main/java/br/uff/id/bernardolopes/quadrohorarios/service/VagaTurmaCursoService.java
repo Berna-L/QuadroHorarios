@@ -14,6 +14,7 @@ import br.uff.id.bernardolopes.quadrohorarios.repository.CursoDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,8 +108,12 @@ public class VagaTurmaCursoService {
     }
     
     public List<Turma> getTurmasParaCursoEAnoSemestre(Curso curso, String anoSemestre) {
+        if (anoSemestre == null) {
+            Calendar cal = Calendar.getInstance();
+            anoSemestre = cal.get(Calendar.YEAR) + "_" + ((cal.get(Calendar.MONTH) / 6) + 1);
+        }
         List<VagaTurmaCurso> listaVTC = vagaTurmaCursoDAO.findByCurso(curso);
-        if (listaVTC == null || listaVTC.size() == 0){
+        if (listaVTC.size() == 0){
             throw new IllegalArgumentException("Nenhuma turma disponível para o curso informado!");
         }
         List<Turma> turmas = new ArrayList<>();
@@ -123,14 +128,14 @@ public class VagaTurmaCursoService {
         return turmas;
     }
 
-    public Map<Curso, Integer> fakeGetInscritosPorCurso(Turma turma) {
-        //NOTHING IS REAL ANYMORE
-        Map<Curso, Integer> relacaoVagas = getVagasPorCurso(turma);
-        Map<Curso, Integer> relacaoInscritos = new HashMap<>();
-        for (Curso curso : relacaoVagas.keySet()) {
-            relacaoInscritos.put(curso, (int) Math.floor(Math.random() * relacaoVagas.get(curso).doubleValue()));
-        }
-        return relacaoInscritos;
-    }
+//    public Map<Curso, Integer> fakeGetInscritosPorCurso(Turma turma) {
+//        //NOTHING IS REAL ANYMORE
+//        Map<Curso, Integer> relacaoVagas = getVagasPorCurso(turma);
+//        Map<Curso, Integer> relacaoInscritos = new HashMap<>();
+//        for (Curso curso : relacaoVagas.keySet()) {
+//            relacaoInscritos.put(curso, (int) Math.floor(Math.random() * relacaoVagas.get(curso).doubleValue()));
+//        }
+//        return relacaoInscritos;
+//    }
 
 }

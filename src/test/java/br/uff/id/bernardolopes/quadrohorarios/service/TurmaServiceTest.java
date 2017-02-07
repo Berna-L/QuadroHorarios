@@ -238,4 +238,12 @@ public class TurmaServiceTest {
         service.criarTurma(request);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void insereNoBancoComRequestNuloDaErro() {
+        //Criação do mock
+        RequestTurma request = null;
+        //Exceção aqui
+        service.criarTurma(request);
+    }
+
 }

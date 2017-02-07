@@ -220,4 +220,13 @@ public class DisciplinaServiceTest {
         //Exceção aqui
         service.criarDisciplina(request);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void insereNoBancoComRequestNuloDaErro() {
+        //Criação do mock
+        RequestDisciplina request = null;
+        //Exceção aqui
+        service.criarDisciplina(request);
+    }
+
 }

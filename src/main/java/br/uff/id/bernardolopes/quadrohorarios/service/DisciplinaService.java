@@ -57,7 +57,7 @@ public class DisciplinaService {
     }
     
     public Disciplina criarDisciplina(RequestDisciplina request){
-        if (request.isValid()){
+        if (request != null && request.isValid()){
             return criarDisciplina(request.getCodigoDisciplina(), request.getNome(), request.getCodigoCurso());
         } else {
             throw new IllegalArgumentException("Requisição inválida!");
