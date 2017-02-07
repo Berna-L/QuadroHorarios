@@ -5,9 +5,9 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.controller;
 
+import br.uff.id.bernardolopes.quadrohorarios.controller.model.RequestDisciplina;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.service.DisciplinaService;
-import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestDisciplina;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;

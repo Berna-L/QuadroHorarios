@@ -15,7 +15,7 @@ import br.uff.id.bernardolopes.quadrohorarios.model.VagaTurmaCurso;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
-import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestTurma;
+import br.uff.id.bernardolopes.quadrohorarios.controller.model.RequestTurma;
 import java.util.List;
 import java.util.Map;
 import javax.transaction.Transactional;
@@ -48,7 +48,7 @@ public class TurmaServiceTest {
 
     private static final long ID_TURMA = 1L;
     private static final String CODIGO_TURMA = "T1";
-    private static final String ANOSEMESTRE = "2017_1";
+    private static final String ANO_SEMESTRE = "2017_1";
 
     private static final String CODIGO_DISCIPLINA_INEXISTENTE = "TES99999";
 
@@ -103,12 +103,12 @@ public class TurmaServiceTest {
         //Criação por fixture
         Disciplina d = Fixture.from(Disciplina.class).gimme("valido");
         //Hora do show
-        Turma t = service.criarTurma(CODIGO_TURMA, ANOSEMESTRE, d);
+        Turma t = service.criarTurma(CODIGO_TURMA, ANO_SEMESTRE, d);
         //Asserções de valor
         assertEquals(CODIGO_TURMA, t.getCodigo());
         assertEquals(d, t.getDisciplina());
         //Verificação de chamadas
-        verify(turmaDAO).findByCodigoAndAnosemestreAndDisciplina(CODIGO_TURMA, ANOSEMESTRE, d);
+        verify(turmaDAO).findByCodigoAndAnoSemestreAndDisciplina(CODIGO_TURMA, ANO_SEMESTRE, d);
         verify(turmaDAO).save(t);
     }
 
@@ -125,14 +125,14 @@ public class TurmaServiceTest {
         //Configuração do mock disciplinaDAO
         when(disciplinaDAO.findByCodigo(d.getCodigo())).thenReturn(mockList);
         //Hora do show
-        Turma t = service.criarTurma(CODIGO_TURMA, ANOSEMESTRE, d.getCodigo());
+        Turma t = service.criarTurma(CODIGO_TURMA, ANO_SEMESTRE, d.getCodigo());
         //Asserções de valor
         assertEquals(CODIGO_TURMA, t.getCodigo());
-        assertEquals(ANOSEMESTRE, t.getAnosemestre());
+        assertEquals(ANO_SEMESTRE, t.getAnoSemestre());
         assertEquals(d.getCodigo(), t.getDisciplina().getCodigo());
         //Verificações de chamada
         verify(disciplinaDAO).findByCodigo(d.getCodigo());
-        verify(turmaDAO).findByCodigoAndAnosemestreAndDisciplina(CODIGO_TURMA, ANOSEMESTRE, d);
+        verify(turmaDAO).findByCodigoAndAnoSemestreAndDisciplina(CODIGO_TURMA, ANO_SEMESTRE, d);
         verify(turmaDAO).save(t);
     }
 
@@ -148,7 +148,7 @@ public class TurmaServiceTest {
         //Configuração do mock request
         when(request.getCodigoDisciplina()).thenReturn(d.getCodigo());
         when(request.getCodigoTurma()).thenReturn(CODIGO_TURMA);
-        when(request.getAnosemestre()).thenReturn(ANOSEMESTRE);
+        when(request.getAnoSemestre()).thenReturn(ANO_SEMESTRE);
         when(request.isValid()).thenReturn(Boolean.TRUE);
         //Configuração do mock mockList
         when(mockList.get(0)).thenReturn(d);
@@ -158,12 +158,12 @@ public class TurmaServiceTest {
         Turma t = service.criarTurma(request);
         //Asserções de valor
         assertEquals(CODIGO_TURMA, t.getCodigo());
-        assertEquals(ANOSEMESTRE, t.getAnosemestre());
+        assertEquals(ANO_SEMESTRE, t.getAnoSemestre());
         assertEquals(d.getCodigo(), t.getDisciplina().getCodigo());
         //Verificações de chamada
         verify(disciplinaDAO).findByCodigo(d.getCodigo());
         verify(request).isValid();
-        verify(turmaDAO).findByCodigoAndAnosemestreAndDisciplina(CODIGO_TURMA, ANOSEMESTRE, d);
+        verify(turmaDAO).findByCodigoAndAnoSemestreAndDisciplina(CODIGO_TURMA, ANO_SEMESTRE, d);
         verify(turmaDAO).save(t);
     }
 
@@ -178,9 +178,9 @@ public class TurmaServiceTest {
         //Configuração do mock mockList
         when(mockList.isEmpty()).thenReturn(Boolean.FALSE);
         //Configuração do mock turmaDAO
-        when(turmaDAO.findByCodigoAndAnosemestreAndDisciplina(CODIGO_TURMA, ANOSEMESTRE, d)).thenReturn(mockList);
+        when(turmaDAO.findByCodigoAndAnoSemestreAndDisciplina(CODIGO_TURMA, ANO_SEMESTRE, d)).thenReturn(mockList);
         //Execeção aqui
-        service.criarTurma(CODIGO_TURMA, ANOSEMESTRE, d);
+        service.criarTurma(CODIGO_TURMA, ANO_SEMESTRE, d);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -194,11 +194,11 @@ public class TurmaServiceTest {
         //Configuração do mock disciplinaDAO
         when(disciplinaDAO.findByCodigo(d.getCodigo())).thenReturn(mockList);
         //Exceção aqui
-        service.criarTurma(null, ANOSEMESTRE, d.getCodigo());
+        service.criarTurma(null, ANO_SEMESTRE, d.getCodigo());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void insereNoBancoComAnosemestreNuloDaErro() {
+    public void insereNoBancoComAnoSemestreNuloDaErro() {
         //Criação por fixture
         Disciplina d = Fixture.from(Disciplina.class).gimme("valido");
         //Criação de mock
@@ -213,7 +213,7 @@ public class TurmaServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void insereNoBancoComDisciplinaNuloDaErro() {
-        service.criarTurma(CODIGO_TURMA, ANOSEMESTRE, (Disciplina) null);
+        service.criarTurma(CODIGO_TURMA, ANO_SEMESTRE, (Disciplina) null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -225,7 +225,7 @@ public class TurmaServiceTest {
         //Configuração do mock disciplinaDAO
         when(disciplinaDAO.findByCodigo(CODIGO_DISCIPLINA_INEXISTENTE)).thenReturn(mockList);
         //Exceção aqui
-        service.criarTurma(CODIGO_TURMA, ANOSEMESTRE, CODIGO_DISCIPLINA_INEXISTENTE);
+        service.criarTurma(CODIGO_TURMA, ANO_SEMESTRE, CODIGO_DISCIPLINA_INEXISTENTE);
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -29,7 +29,7 @@ public class Turma implements Serializable, Comparable<Turma> {
     
     private String codigo;
     
-    private String anosemestre;
+    private String anoSemestre;
     
     @ManyToOne
     @JsonIgnoreProperties(value = {"codigo", "nome", "curso"})
@@ -39,9 +39,9 @@ public class Turma implements Serializable, Comparable<Turma> {
     public Turma() {
     }
     
-    public Turma(String codigo, String anosemestre, Disciplina disciplina) {
+    public Turma(String codigo, String anoSemestre, Disciplina disciplina) {
         this.codigo = codigo;
-        this.anosemestre = anosemestre;
+        this.anoSemestre = anoSemestre;
         this.disciplina = disciplina;
     }
 
@@ -57,12 +57,15 @@ public class Turma implements Serializable, Comparable<Turma> {
         return disciplina;
     }
 
-    public String getAnosemestre() {
-        return anosemestre;
+    public String getAnoSemestre() {
+        return anoSemestre;
     }
 
     @Override
     public int compareTo(Turma other) {
-        return (this.getId() == other.getId() || (this.getCodigo() == null ? other.getCodigo() == null : this.getCodigo().equals(other.getCodigo()))) ? 1 : 0;
+         if (this.getId() == other.getId() || (this.getCodigo().equals(other.getCodigo()) && this.getDisciplina().equals(other.getDisciplina()) && this.getAnoSemestre().equals(other.getAnoSemestre()))){
+             return 0;
+         }
+         return 1;
     }
 }

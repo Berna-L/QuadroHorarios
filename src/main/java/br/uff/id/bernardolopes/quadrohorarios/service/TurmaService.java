@@ -13,7 +13,7 @@ import br.uff.id.bernardolopes.quadrohorarios.model.VagaTurmaCurso;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
-import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestTurma;
+import br.uff.id.bernardolopes.quadrohorarios.controller.model.RequestTurma;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,33 +56,33 @@ public class TurmaService {
 
     public Turma criarTurma(RequestTurma request) {
         if (request != null && request.isValid()) {
-            return criarTurma(request.getCodigoTurma(), request.getAnosemestre(), request.getCodigoDisciplina());
+            return criarTurma(request.getCodigoTurma(), request.getAnoSemestre(), request.getCodigoDisciplina());
         } else {
             throw new IllegalArgumentException("Requisição inválida!");
         }
     }
 
-    public Turma criarTurma(String codigoTurma, String anosemestre, String codigoDisciplina) throws InstanceAlreadyExistsException {
+    public Turma criarTurma(String codigoTurma, String anoSemestre, String codigoDisciplina) throws InstanceAlreadyExistsException {
         try {
             Disciplina d = disciplinaDAO.findByCodigo(codigoDisciplina).get(0);
-            return criarTurma(codigoTurma, anosemestre, d);
+            return criarTurma(codigoTurma, anoSemestre, d);
         } catch (IndexOutOfBoundsException ex) {
             throw new IllegalArgumentException("Disciplina não encontrada com código " + codigoDisciplina);
         }
     }
 
-    public Turma criarTurma(String codigoTurma, String anosemestre, Disciplina disciplina) throws InstanceAlreadyExistsException {
-        if (turmaDAO.findByCodigoAndAnosemestreAndDisciplina(codigoTurma, anosemestre, disciplina).isEmpty()) { //Se já existe turma com código, não pode criar outra
+    public Turma criarTurma(String codigoTurma, String anoSemestre, Disciplina disciplina) throws InstanceAlreadyExistsException {
+        if (turmaDAO.findByCodigoAndAnoSemestreAndDisciplina(codigoTurma, anoSemestre, disciplina).isEmpty()) { //Se já existe turma com código, não pode criar outra
             if (codigoTurma == null) {
                 throw new IllegalArgumentException("Código da turma não pode ser nulo!");
             }
-            if (anosemestre == null) {
-                throw new IllegalArgumentException("Anosemestre não pode ser nulo!");
+            if (anoSemestre == null) {
+                throw new IllegalArgumentException("AnoSemestre não pode ser nulo!");
             }
             if (disciplina == null) {
                 throw new IllegalArgumentException("Disciplina não pode ser nulo!");
             }
-            Turma t = new Turma(codigoTurma, anosemestre, disciplina);
+            Turma t = new Turma(codigoTurma, anoSemestre, disciplina);
             turmaDAO.save(t);
             return t;
         } else {

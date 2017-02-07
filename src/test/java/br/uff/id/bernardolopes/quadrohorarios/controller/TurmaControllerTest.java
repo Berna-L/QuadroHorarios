@@ -5,10 +5,10 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.controller;
 
+import br.uff.id.bernardolopes.quadrohorarios.controller.model.RequestTurma;
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
-import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestTurma;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -58,7 +58,7 @@ public class TurmaControllerTest {
         ResponseEntity<Turma> response = restTemplate.postForEntity("/turmas", rt, Turma.class);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(rt.getCodigoTurma(), response.getBody().getCodigo());
-        assertEquals(rt.getAnosemestre(), response.getBody().getAnosemestre());
+        assertEquals(rt.getAnoSemestre(), response.getBody().getAnoSemestre());
         assertNotNull(response.getBody().getDisciplina());
     }
 
@@ -79,10 +79,10 @@ public class TurmaControllerTest {
     }
 
     @Test
-    public void postTurmaSemAnosemestreDaErro() {
+    public void postTurmaSemAnoSemestreDaErro() {
         RequestTurma rt = Fixture.from(RequestTurma.class).gimme("valido");
         rt.setCodigoDisciplina("TCC00173");
-        rt.setAnosemestre(null);
+        rt.setAnoSemestre(null);
         ResponseEntity<Turma> response = restTemplate.postForEntity("/turmas", rt, Turma.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }

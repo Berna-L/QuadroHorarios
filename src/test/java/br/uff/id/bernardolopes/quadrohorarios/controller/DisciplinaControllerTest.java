@@ -5,10 +5,10 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.controller;
 
+import br.uff.id.bernardolopes.quadrohorarios.controller.model.RequestDisciplina;
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
-import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestDisciplina;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;

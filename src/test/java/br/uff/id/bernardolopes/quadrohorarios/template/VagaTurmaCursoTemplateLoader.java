@@ -34,6 +34,14 @@ public class VagaTurmaCursoTemplateLoader implements TemplateLoader {
                 add("vagas", random(Integer.class, 1, 80));
             }
         });
+        Fixture.of(VagaTurmaCurso.class).addTemplate("curso-fixo", new Rule() {
+            {
+                add("turma", one(Turma.class, "curso-fixo"));
+                add("curso", one(Curso.class, "curso-fixo"));
+                add("vagas", random(Integer.class, 1, 80));
+
+            }
+        });
     }
 
 }

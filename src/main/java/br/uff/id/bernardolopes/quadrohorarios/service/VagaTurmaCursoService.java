@@ -9,10 +9,11 @@ import br.uff.id.bernardolopes.quadrohorarios.exception.InstanceAlreadyExistsExc
 import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
 import br.uff.id.bernardolopes.quadrohorarios.model.VagaTurmaCurso;
-import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestVagaTurmaCurso;
+import br.uff.id.bernardolopes.quadrohorarios.controller.model.RequestVagaTurmaCurso;
 import br.uff.id.bernardolopes.quadrohorarios.repository.CursoDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,10 @@ public class VagaTurmaCursoService {
     public void setVagaTurmaCursoDAO(VagaTurmaCursoDAO vagaTurmaCursoDAO) {
         this.vagaTurmaCursoDAO = vagaTurmaCursoDAO;
     }
+    
+    public void setCursoDAO(CursoDAO cursoDAO){
+        this.cursoDAO = cursoDAO;
+    }
 
     public VagaTurmaCurso criarVagaTurmaCurso(RequestVagaTurmaCurso request) {
         if (request.isValid()) {
@@ -63,7 +68,7 @@ public class VagaTurmaCursoService {
     }
 
     public VagaTurmaCurso criarVagaTurmaCurso(Turma turma, Curso curso, int vagas) {
-        if (vagaTurmaCursoDAO.findByTurmaAndCurso(turma, curso).isEmpty()){
+        if (vagaTurmaCursoDAO.findByTurmaAndCurso(turma, curso).isEmpty()) {
             if (turma == null) {
                 throw new IllegalArgumentException("Turma não pode ser nulo!");
             }
@@ -76,12 +81,12 @@ public class VagaTurmaCursoService {
             VagaTurmaCurso vtc = new VagaTurmaCurso(turma, curso, vagas);
             vagaTurmaCursoDAO.save(vtc);
             return vtc;
-        }else {
+        } else {
             throw new InstanceAlreadyExistsException();
+        }
     }
-}
 
-public Map<Curso, Integer> getVagasPorCurso(Turma turma) {
+    public Map<Curso, Integer> getVagasPorCurso(Turma turma) {
         if (turma == null) {
             throw new IllegalArgumentException("Turma não pode ser nulo!");
         }
@@ -91,6 +96,31 @@ public Map<Curso, Integer> getVagasPorCurso(Turma turma) {
             relacaoVagas.put(entrada.getCurso(), entrada.getVagas());
         }
         return relacaoVagas;
+    }
+    
+    public List<Turma> getTurmasParaCursoEAnoSemestre(long codigoCurso, String anoSemestre){
+        Curso curso = cursoDAO.findOne(codigoCurso);
+        if (curso == null){
+            throw new IllegalArgumentException("Curso não encontrado com ID informado!");
+        }
+        return getTurmasParaCursoEAnoSemestre(curso, anoSemestre);
+    }
+    
+    public List<Turma> getTurmasParaCursoEAnoSemestre(Curso curso, String anoSemestre) {
+        List<VagaTurmaCurso> listaVTC = vagaTurmaCursoDAO.findByCurso(curso);
+        if (listaVTC == null || listaVTC.size() == 0){
+            throw new IllegalArgumentException("Nenhuma turma disponível para o curso informado!");
+        }
+        List<Turma> turmas = new ArrayList<>();
+        for (VagaTurmaCurso vtc : listaVTC) {
+            if (vtc.getTurma().getAnoSemestre().equals(anoSemestre)){
+                turmas.add(vtc.getTurma());
+            }
+        }
+        if (turmas.isEmpty()){
+            throw new IllegalArgumentException("Nenhuma turma disponível para o ano-semestre informado!");
+        }
+        return turmas;
     }
 
     public Map<Curso, Integer> fakeGetInscritosPorCurso(Turma turma) {

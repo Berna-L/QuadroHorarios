@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.uff.id.bernardolopes.quadrohorarios.model.unmanaged;
+package br.uff.id.bernardolopes.quadrohorarios.controller.model;
 
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import java.io.Serializable;
@@ -18,7 +18,7 @@ public class RequestTurma implements Serializable {
 
     private String codigoDisciplina;
 
-    private String anosemestre;
+    private String anoSemestre;
 
     public RequestTurma() {
     }
@@ -43,12 +43,12 @@ public class RequestTurma implements Serializable {
         return codigoTurma != null && codigoDisciplina != null;
     }
 
-    public String getAnosemestre() {
-        return anosemestre;
+    public String getAnoSemestre() {
+        return anoSemestre;
     }
 
-    public void setAnosemestre(String anosemestre) {
-        this.anosemestre = anosemestre;
+    public void setAnoSemestre(String anoSemestre) {
+        this.anoSemestre = anoSemestre;
     }
 
 }

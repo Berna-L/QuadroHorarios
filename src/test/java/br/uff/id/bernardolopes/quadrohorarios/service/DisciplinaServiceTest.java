@@ -13,7 +13,7 @@ import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.repository.CursoDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
-import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestDisciplina;
+import br.uff.id.bernardolopes.quadrohorarios.controller.model.RequestDisciplina;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.junit.After;

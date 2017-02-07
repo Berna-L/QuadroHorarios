@@ -5,6 +5,7 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.controller;
 
+import br.uff.id.bernardolopes.quadrohorarios.controller.model.RequestTurma;
 import br.uff.id.bernardolopes.quadrohorarios.exception.InstanceAlreadyExistsException;
 import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
@@ -12,8 +13,6 @@ import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.service.TurmaService;
-import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestDisciplina;
-import br.uff.id.bernardolopes.quadrohorarios.model.unmanaged.RequestTurma;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;

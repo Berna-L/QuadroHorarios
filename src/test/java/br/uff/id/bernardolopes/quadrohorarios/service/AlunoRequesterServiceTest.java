@@ -33,8 +33,8 @@ import org.springframework.test.context.junit4.SpringRunner;
  *
  * @author bernardolopes at id.uff.br
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT);
 public class AlunoRequesterServiceTest {
     
     private ObjectMapper mapper;

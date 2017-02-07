@@ -20,4 +20,6 @@ public interface VagaTurmaCursoDAO extends JpaRepository<VagaTurmaCurso, Long>{
     public List<VagaTurmaCurso> findByTurma(Turma turma);
     
     public List<VagaTurmaCurso> findByTurmaAndCurso(Turma turma, Curso curso);
+    
+    public List<VagaTurmaCurso> findByCurso(Curso curso);
 }
