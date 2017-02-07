@@ -34,6 +34,13 @@ public class TurmaTemplateLoader implements TemplateLoader {
                 add("disciplina", one(Disciplina.class, "turma-disciplina-fixas"));
             }
         });
+        Fixture.of(Turma.class).addTemplate("curso-fixo", new Rule() {
+            {
+                add("codigo", "[A-Z]{1}1");
+                add("anoSemestre", regex("2017_1"));
+                add("disciplina", one(Disciplina.class, "curso-fixo"));
+            }
+        });
         Fixture.of(RequestTurma.class).addTemplate("valido", new Rule() {
             {
                 add("codigoTurma", regex("[A-Z]{1}[0-9]{1}"));

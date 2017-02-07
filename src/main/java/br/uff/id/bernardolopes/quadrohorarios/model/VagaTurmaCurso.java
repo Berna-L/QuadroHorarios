@@ -7,6 +7,7 @@ package br.uff.id.bernardolopes.quadrohorarios.model;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
@@ -17,6 +18,7 @@ import javax.persistence.Id;
 public class VagaTurmaCurso implements Serializable {
     
     @Id
+    @GeneratedValue
     private long id;
     
     private Turma turma;
