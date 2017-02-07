@@ -15,7 +15,7 @@ public class RequestDisciplina implements Serializable {
 
     private String codigoDisciplina;
     private String nome;
-    private long codigoCurso;
+    private Long codigoCurso;
     
     public RequestDisciplina() {}
 
@@ -35,15 +35,15 @@ public class RequestDisciplina implements Serializable {
         this.nome = nome;
     }
 
-    public long getCodigoCurso() {
+    public Long getCodigoCurso() {
         return codigoCurso;
     }
 
-    public void setCodigoCurso(long codigoCurso) {
+    public void setCodigoCurso(Long codigoCurso) {
         this.codigoCurso = codigoCurso;
     }
     
     public boolean isValid() {
-        return codigoDisciplina != null && nome != null && codigoCurso != 0;
+        return codigoDisciplina != null && nome != null && codigoCurso != null;
     }
 }

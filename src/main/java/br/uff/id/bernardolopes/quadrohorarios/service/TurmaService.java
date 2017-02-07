@@ -50,7 +50,7 @@ public class TurmaService {
         return turmaDAO.findAll();
     }
     
-    public Turma getTurma(long id) {
+    public Turma getTurma(Long id) {
         return turmaDAO.findOne(id);
     }
 

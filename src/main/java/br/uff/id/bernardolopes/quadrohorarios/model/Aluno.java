@@ -18,18 +18,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Entity
 public class Aluno implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final Long serialVersionUID = 1L;
    
     private String nome;
     @Id
-    private long matricula;
+    private Long matricula;
     
     @ManyToOne
     private Curso curso;
     
     public Aluno() {}
 
-    public Aluno(String nome, long matricula) {
+    public Aluno(String nome, Long matricula) {
         this.nome = nome;
         this.matricula = matricula;
     }
@@ -38,7 +38,7 @@ public class Aluno implements Serializable {
         return nome;
     }
 
-    public long getMatricula() {
+    public Long getMatricula() {
         return matricula;
     }
 

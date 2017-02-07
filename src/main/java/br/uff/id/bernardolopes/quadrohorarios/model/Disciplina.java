@@ -24,7 +24,7 @@ public class Disciplina implements Serializable {
     
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     
     private String codigo;
     
@@ -46,7 +46,7 @@ public class Disciplina implements Serializable {
         this.curso = curso;
     }
 
-    public long getId(){
+    public Long getId(){
         return id;
     }
     

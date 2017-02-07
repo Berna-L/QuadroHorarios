@@ -55,7 +55,7 @@ public class VagaTurmaCursoService {
         }
     }
 
-    public VagaTurmaCurso criarVagaTurmaCurso(long idTurma, long idCurso, int vagas) {
+    public VagaTurmaCurso criarVagaTurmaCurso(Long idTurma, Long idCurso, Integer vagas) {
         Turma turma = turmaDAO.getOne(idTurma);
         if (turma == null) {
             throw new IllegalArgumentException("Turma não encontrada!");
@@ -67,7 +67,7 @@ public class VagaTurmaCursoService {
         return criarVagaTurmaCurso(turma, curso, vagas);
     }
 
-    public VagaTurmaCurso criarVagaTurmaCurso(Turma turma, Curso curso, int vagas) {
+    public VagaTurmaCurso criarVagaTurmaCurso(Turma turma, Curso curso, Integer vagas) {
         if (vagaTurmaCursoDAO.findByTurmaAndCurso(turma, curso).isEmpty()) {
             if (turma == null) {
                 throw new IllegalArgumentException("Turma não pode ser nulo!");
@@ -98,7 +98,7 @@ public class VagaTurmaCursoService {
         return relacaoVagas;
     }
     
-    public List<Turma> getTurmasParaCursoEAnoSemestre(long codigoCurso, String anoSemestre){
+    public List<Turma> getTurmasParaCursoEAnoSemestre(Long codigoCurso, String anoSemestre){
         Curso curso = cursoDAO.findOne(codigoCurso);
         if (curso == null){
             throw new IllegalArgumentException("Curso não encontrado com ID informado!");

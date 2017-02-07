@@ -22,7 +22,7 @@ public class VagaTurmaCurso implements Serializable {
     
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     
     @ManyToOne
     private Turma turma;
@@ -30,18 +30,18 @@ public class VagaTurmaCurso implements Serializable {
     @ManyToOne
     private Curso curso;
     
-    private int vagas;
+    private Integer vagas;
 
     public VagaTurmaCurso() {
     }
 
-    public VagaTurmaCurso(Turma turma, Curso curso, int vagas) {
+    public VagaTurmaCurso(Turma turma, Curso curso, Integer vagas) {
         this.turma = turma;
         this.curso = curso;
         this.vagas = vagas;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -53,11 +53,11 @@ public class VagaTurmaCurso implements Serializable {
         return curso;
     }
 
-    public int getVagas() {
+    public Integer getVagas() {
         return vagas;
     }
 
-    public void setVagas(int vagas) {
+    public void setVagas(Integer vagas) {
         this.vagas = vagas;
     }
     

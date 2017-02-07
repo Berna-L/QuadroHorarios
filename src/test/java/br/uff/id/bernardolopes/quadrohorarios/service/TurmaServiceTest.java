@@ -46,7 +46,7 @@ public class TurmaServiceTest {
 
     private TurmaService service;
 
-    private static final long ID_TURMA = 1L;
+    private static final Long ID_TURMA = 1L;
     private static final String CODIGO_TURMA = "T1";
     private static final String ANO_SEMESTRE = "2017_1";
 

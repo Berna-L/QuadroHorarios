@@ -6,12 +6,7 @@
 package br.uff.id.bernardolopes.quadrohorarios.controller;
 
 import br.uff.id.bernardolopes.quadrohorarios.controller.model.RequestTurma;
-import br.uff.id.bernardolopes.quadrohorarios.exception.InstanceAlreadyExistsException;
-import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
-import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
-import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
-import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.service.TurmaService;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,9 +14,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +35,12 @@ public class TurmaController {
     public ResponseEntity<List<Turma>> getTurmas() {
         return ResponseEntity.ok().body(service.getTurmas());
     }
+    
+    @GetMapping(value = {"/turmas/{id}", "/turma/{id}"})
+    public ResponseEntity<Turma> getTurma(@PathVariable Long id){
+        return ResponseEntity.ok().body(service.getTurma(id));
+    }
+
 
     @Transactional
     @PostMapping(path = "/turmas")

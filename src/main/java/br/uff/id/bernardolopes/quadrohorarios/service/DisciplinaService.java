@@ -52,7 +52,7 @@ public class DisciplinaService {
         return disciplinaDAO.findAll();
     }
     
-    public Disciplina getDisciplina(long id){
+    public Disciplina getDisciplina(Long id){
         return disciplinaDAO.findOne(id);
     }
     

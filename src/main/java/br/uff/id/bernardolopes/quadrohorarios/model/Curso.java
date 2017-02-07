@@ -18,7 +18,7 @@ import javax.persistence.Id;
 public class Curso implements Serializable {
     
     @Id 
-    private long codigo;
+    private Long codigo;
     
     private String nome;
 
@@ -30,7 +30,7 @@ public class Curso implements Serializable {
         this.nome = nome;
     }
 
-    public long getCodigo() {
+    public Long getCodigo() {
         return codigo;
     }
 

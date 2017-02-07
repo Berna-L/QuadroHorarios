@@ -11,36 +11,36 @@ package br.uff.id.bernardolopes.quadrohorarios.controller.model;
  */
 public class RequestVagaTurmaCurso {
     
-    private long idTurma;
+    private Long idTurma;
     
-    private long idCurso;
+    private Long idCurso;
     
-    private int vagas;
+    private Integer vagas;
 
     public RequestVagaTurmaCurso() {
     }
 
-    public long getIdTurma() {
+    public Long getIdTurma() {
         return idTurma;
     }
 
-    public void setIdTurma(long idTurma) {
+    public void setIdTurma(Long idTurma) {
         this.idTurma = idTurma;
     }
 
-    public long getIdCurso() {
+    public Long getIdCurso() {
         return idCurso;
     }
 
-    public void setIdCurso(long idCurso) {
+    public void setIdCurso(Long idCurso) {
         this.idCurso = idCurso;
     }
 
-    public int getVagas() {
+    public Integer getVagas() {
         return vagas;
     }
 
-    public void setVagas(int vagas) {
+    public void setVagas(Integer vagas) {
         this.vagas = vagas;
     }
     

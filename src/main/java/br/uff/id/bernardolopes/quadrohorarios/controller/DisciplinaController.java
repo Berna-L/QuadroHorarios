@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,8 +39,8 @@ public class DisciplinaController {
         return ResponseEntity.ok().body(service.getDisciplinas());
     }
 
-    @GetMapping(path = {"/disciplinas/{id}", "/disciplina/{id}"})
-    public ResponseEntity<Disciplina> getDisciplina(long id){
+    @GetMapping(value = {"/disciplinas/{id}", "/disciplina/{id}"})
+    public ResponseEntity<Disciplina> getDisciplina(@PathVariable Long id){
         return ResponseEntity.ok().body(service.getDisciplina(id));
     }
     

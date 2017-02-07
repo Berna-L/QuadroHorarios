@@ -25,7 +25,7 @@ public class Turma implements Serializable, Comparable<Turma> {
     
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     
     private String codigo;
     
@@ -45,7 +45,7 @@ public class Turma implements Serializable, Comparable<Turma> {
         this.disciplina = disciplina;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
     

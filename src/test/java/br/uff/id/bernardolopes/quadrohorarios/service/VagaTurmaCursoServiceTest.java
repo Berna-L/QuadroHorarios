@@ -50,7 +50,7 @@ public class VagaTurmaCursoServiceTest {
     private final String ANO_SEMESTRE = "2017_1";
     private final String ANO_SEMESTRE_INEXISTENTE = "2012_2";
     
-    private final long CODIGO_CURSO_INEXISTENTE = 0L;
+    private final Long CODIGO_CURSO_INEXISTENTE = 0L;
 
     @Before
     public void setUp() {
@@ -118,7 +118,7 @@ public class VagaTurmaCursoServiceTest {
         //Configuração do mock
         when(vagaTurmaCursoDAO.findByCurso(Matchers.any())).thenReturn(listaVTC);
         //Exceção aqui
-        List<Turma> turmas = service.getTurmasParaCursoEAnoSemestre(null, ANO_SEMESTRE);
+        List<Turma> turmas = service.getTurmasParaCursoEAnoSemestre((Curso) null, ANO_SEMESTRE);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -157,7 +157,7 @@ public class VagaTurmaCursoServiceTest {
         Map<Curso, Integer> mapa = service.getVagasPorCurso(t);
         //Asserções de valor
         for (VagaTurmaCurso vtc : listaEsperada) {
-            assertEquals(vtc.getVagas(), (long) mapa.get(vtc.getCurso()));
+            assertEquals(vtc.getVagas(), mapa.get(vtc.getCurso()));
         }
         //Verificação de chamadas
         verify(vagaTurmaCursoDAO).findByTurma(t);;

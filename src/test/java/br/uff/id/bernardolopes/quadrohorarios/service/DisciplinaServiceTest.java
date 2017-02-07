@@ -45,15 +45,15 @@ public class DisciplinaServiceTest {
 
     private DisciplinaService service;
 
-    private static final long ID_DISCIPLINA = 1L;
+    private static final Long ID_DISCIPLINA = 1L;
     private static final String CODIGO_DISCIPLINA = "TES40404";
     private static final String NOME_DISCIPLINA = "Testes de Configuração";
 
     private static final String CODIGO_DISCIPLINA_2 = "TES42424";
     private static final String NOME_DISCIPLINA_2 = "Testes de Universo";
 
-    private static final long CODIGO_CURSO_INEXISTENTE = 0L;
-    private static final long CODIGO_CURSO_QUALQUER = 10L;
+    private static final Long CODIGO_CURSO_INEXISTENTE = 0L;
+    private static final Long CODIGO_CURSO_QUALQUER = 10L;
 
     @Before
     public void setUp() {
