@@ -108,7 +108,7 @@ public class VagaTurmaCursoService {
     }
     
     public List<Turma> getTurmasParaCursoEAnoSemestre(Curso curso, String anoSemestre) {
-        if (anoSemestre == null) {
+        if (anoSemestre == null || anoSemestre.isEmpty()) {
             Calendar cal = Calendar.getInstance();
             anoSemestre = cal.get(Calendar.YEAR) + "_" + ((cal.get(Calendar.MONTH) / 6) + 1);
         }
