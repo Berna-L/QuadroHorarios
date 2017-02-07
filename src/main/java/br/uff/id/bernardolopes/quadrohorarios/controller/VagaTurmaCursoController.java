@@ -9,7 +9,6 @@ import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
 import br.uff.id.bernardolopes.quadrohorarios.service.VagaTurmaCursoService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,17 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author bernardolopes at id.uff.br
  */
-
 @RestController
 public class VagaTurmaCursoController {
-    
+
     @Autowired
     private VagaTurmaCursoService service;
-    
-    @GetMapping(path = "/vagaturmacurso")
-    public ResponseEntity<List<Turma>> getTurmasPorCursoEAnoSemestre(@RequestParam(name = "curso") Long codigoCurso, String anoSemestre){
+
+    @GetMapping(path = "/turmacurso")
+    public ResponseEntity<List<Turma>> getTurmasPorCursoEAnoSemestre(@RequestParam(name = "curso") Long codigoCurso, String anoSemestre) {
         List<Turma> resultado = service.getTurmasParaCursoEAnoSemestre(codigoCurso, anoSemestre);
         return ResponseEntity.ok(resultado);
     }
-    
+
 }
