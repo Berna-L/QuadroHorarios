@@ -10,7 +10,9 @@ import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
 import br.uff.id.bernardolopes.quadrohorarios.model.VagaTurmaCurso;
 import br.uff.id.bernardolopes.quadrohorarios.controller.model.RequestVagaTurmaCurso;
+import br.uff.id.bernardolopes.quadrohorarios.model.Disciplina;
 import br.uff.id.bernardolopes.quadrohorarios.repository.CursoDAO;
+import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
 import java.util.ArrayList;
@@ -36,6 +38,9 @@ public class VagaTurmaCursoService {
 
     @Autowired
     private CursoDAO cursoDAO;
+    
+    @Autowired
+    private DisciplinaDAO disciplinaDAO;
 
     public VagaTurmaCursoService() {
     }
@@ -43,8 +48,8 @@ public class VagaTurmaCursoService {
     public void setVagaTurmaCursoDAO(VagaTurmaCursoDAO vagaTurmaCursoDAO) {
         this.vagaTurmaCursoDAO = vagaTurmaCursoDAO;
     }
-    
-    public void setCursoDAO(CursoDAO cursoDAO){
+
+    public void setCursoDAO(CursoDAO cursoDAO) {
         this.cursoDAO = cursoDAO;
     }
 
@@ -98,31 +103,63 @@ public class VagaTurmaCursoService {
         }
         return relacaoVagas;
     }
-    
-    public List<Turma> getTurmasParaCursoEAnoSemestre(Long codigoCurso, String anoSemestre){
+
+    public Map<Long, Long> getQuantidadeTurmasPorCurso() {
+        List<Object[]> lista = vagaTurmaCursoDAO.getCountByCurso();
+        Map<Long, Long> mapa = new HashMap<>();
+        for (Object[] array : lista) {
+            Long cod = ((Curso) array[0]).getCodigo();
+            mapa.put(cod, (Long) array[1]);
+        }
+        return mapa;
+    }
+
+    public Map<String, Long> getQuantidadeTurmasPorAnoSemestre() {
+        List<Object[]> lista = vagaTurmaCursoDAO.getCountByAnoSemestre();
+        Map<String, Long> mapa = new HashMap<>();
+        for (Object[] array : lista) {
+            mapa.put((String) array[0], (Long) array[1]);
+        }
+        return mapa;
+    }
+
+    public Map<String, Long> getQuantidadeVagasPorAnoSemestreParaDisciplina(Long id) {
+        Disciplina d = disciplinaDAO.findOne(id);
+        if (d == null){
+            throw new IllegalArgumentException("Disciplina não encontrada!");
+        }
+        List<Object[]> lista = vagaTurmaCursoDAO.getVagasByAnoSemestreForDisciplina(d);
+        Map<String, Long> mapa = new HashMap<>();
+        for (Object[] array : lista) {
+            mapa.put((String) array[0], (Long) array[1]);
+        }
+        return mapa;
+    }
+
+    public List<Turma> getTurmasParaCursoEAnoSemestre(Long codigoCurso, String anoSemestre) {
         Curso curso = cursoDAO.findOne(codigoCurso);
-        if (curso == null){
+        if (curso == null) {
             throw new IllegalArgumentException("Curso não encontrado com ID informado!");
         }
         return getTurmasParaCursoEAnoSemestre(curso, anoSemestre);
     }
-    
+
     public List<Turma> getTurmasParaCursoEAnoSemestre(Curso curso, String anoSemestre) {
         if (anoSemestre == null || anoSemestre.isEmpty()) {
             Calendar cal = Calendar.getInstance();
             anoSemestre = cal.get(Calendar.YEAR) + "_" + ((cal.get(Calendar.MONTH) / 6) + 1);
         }
         List<VagaTurmaCurso> listaVTC = vagaTurmaCursoDAO.findByCurso(curso);
-        if (listaVTC.size() == 0){
+        if (listaVTC.size() == 0) {
             throw new IllegalArgumentException("Nenhuma turma disponível para o curso informado!");
         }
         List<Turma> turmas = new ArrayList<>();
         for (VagaTurmaCurso vtc : listaVTC) {
-            if (vtc.getTurma().getAnoSemestre().equals(anoSemestre)){
+            if (vtc.getTurma().getAnoSemestre().equals(anoSemestre)) {
                 turmas.add(vtc.getTurma());
             }
         }
-        if (turmas.isEmpty()){
+        if (turmas.isEmpty()) {
             throw new IllegalArgumentException("Nenhuma turma disponível para o ano-semestre informado!");
         }
         return turmas;
@@ -137,5 +174,4 @@ public class VagaTurmaCursoService {
 //        }
 //        return relacaoInscritos;
 //    }
-
 }

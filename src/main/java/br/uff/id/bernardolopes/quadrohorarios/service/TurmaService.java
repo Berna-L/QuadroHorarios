@@ -41,7 +41,6 @@ public class TurmaService {
         this.turmaDAO = turmaDAO;
     }
 
-
     public void setDisciplinaDAO(DisciplinaDAO disciplinaDAO) {
         this.disciplinaDAO = disciplinaDAO;
     }
@@ -49,7 +48,7 @@ public class TurmaService {
     public List<Turma> getTurmas() {
         return turmaDAO.findAll();
     }
-    
+
     public Turma getTurma(Long id) {
         return turmaDAO.findOne(id);
     }
@@ -89,5 +88,13 @@ public class TurmaService {
             throw new InstanceAlreadyExistsException();
         }
 
+    }
+
+    public Long getQuantidadeTurmasParaDisciplina(Long id) {
+        Disciplina d = disciplinaDAO.findOne(id);
+        if (d == null) {
+            throw new IllegalArgumentException("Disciplina não encontrada!");
+        }
+        return turmaDAO.getQuantidadeTurmasForDisciplina(d);
     }
 }

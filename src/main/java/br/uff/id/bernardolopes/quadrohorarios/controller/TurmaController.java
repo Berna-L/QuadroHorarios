@@ -49,4 +49,10 @@ public class TurmaController {
         Turma t = service.criarTurma(request);
         return ResponseEntity.created(new URI("/turmas/" + t.getId())).body(t);
     }
+    
+    @GetMapping(value = "/turmas/porDisciplina/{id}")
+    public ResponseEntity<Long> getQuantidadeTurmasParaDisciplina(@PathVariable Long id){
+        Long resultado = service.getQuantidadeTurmasParaDisciplina(id);
+        return ResponseEntity.ok(resultado);
+    }
 }

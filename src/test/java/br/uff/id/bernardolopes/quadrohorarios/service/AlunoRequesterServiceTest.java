@@ -64,7 +64,7 @@ public class AlunoRequesterServiceTest {
         }
         URL url = new URL(REST_URL + turma.getId());
         when(mapper.readValue(url, Map.class)).thenReturn(mapaEsperado);
-        Map<Curso, List<Aluno>> mapa = service.getListaAlunosPorCursoEmTurma(turma, url);
+        Map<Curso, Integer> mapa = service.getListaAlunosPorCursoEmTurma(turma, url);
         assertEquals(mapaEsperado, mapa);
     }
 }

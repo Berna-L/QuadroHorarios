@@ -38,13 +38,13 @@ public class AlunoRequesterService {
         this.mapper = mapper;
     }
     
-    public Map<Curso, List<Aluno>> getListaAlunosPorCursoEmTurma(Turma turma) throws MalformedURLException, ProtocolException, IOException {
+    public Map<Curso, Integer> getListaAlunosPorCursoEmTurma(Turma turma) throws MalformedURLException, ProtocolException, IOException {
         URL url = new URL(REST_URL + turma.getId());
         return getListaAlunosPorCursoEmTurma(turma, url);
     }
     
-    public Map<Curso, List<Aluno>> getListaAlunosPorCursoEmTurma(Turma turma, URL url) throws IOException{
-        Map<Curso, List<Aluno>> resultado = mapper.readValue(url, Map.class);
+    public Map<Curso, Integer> getListaAlunosPorCursoEmTurma(Turma turma, URL url) throws IOException{
+        Map<Curso, Integer> resultado = mapper.readValue(url, Map.class);
         return resultado;
     }
 }
