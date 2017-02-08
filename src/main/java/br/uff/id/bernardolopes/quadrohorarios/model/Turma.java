@@ -32,7 +32,7 @@ public class Turma implements Serializable, Comparable<Turma> {
     private String anoSemestre;
     
     @ManyToOne
-    @JsonIgnoreProperties(value = {"codigo", "nome", "curso"})
+//    @JsonIgnoreProperties(value = {"codigo", "nome", "curso"})
     private Disciplina disciplina;
     
 
