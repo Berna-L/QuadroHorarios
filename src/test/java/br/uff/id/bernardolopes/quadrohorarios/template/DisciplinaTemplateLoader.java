@@ -47,6 +47,7 @@ public class DisciplinaTemplateLoader implements TemplateLoader {
             {
                 add("codigoDisciplina", regex("TES\\d{5}"));
                 add("nome", regex("Cálculo \\d{3}"));
+                add("codigoCurso", 31L);
             }
         });
     }

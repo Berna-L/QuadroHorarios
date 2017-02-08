@@ -49,7 +49,7 @@ public class VagaTurmaCursoServiceTest {
 
     private final String ANO_SEMESTRE = "2017_1";
     private final String ANO_SEMESTRE_INEXISTENTE = "2012_2";
-    
+
     private final Long CODIGO_CURSO_INEXISTENTE = 0L;
 
     @Before
@@ -59,6 +59,10 @@ public class VagaTurmaCursoServiceTest {
         cursoDAO = mock(CursoDAO.class);
         service.setVagaTurmaCursoDAO(vagaTurmaCursoDAO);
         service.setCursoDAO(cursoDAO);
+    }
+
+    @BeforeClass
+    public static void beforeClass() {
         FixtureFactoryLoader.loadTemplates("br.uff.id.bernardolopes.quadrohorarios.template");
     }
 

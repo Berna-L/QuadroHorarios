@@ -45,6 +45,7 @@ public class TurmaTemplateLoader implements TemplateLoader {
             {
                 add("codigoTurma", regex("[A-Z]{1}[0-9]{1}"));
                 add("anoSemestre", regex("2016_1"));
+                add("codigoDisciplina", "TCC00173");
             }
         });
     }

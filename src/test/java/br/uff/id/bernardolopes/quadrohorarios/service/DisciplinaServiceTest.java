@@ -62,6 +62,10 @@ public class DisciplinaServiceTest {
         cursoDAO = mock(CursoDAO.class);
         service.setDisciplinaDAO(disciplinaDAO);
         service.setCursoDAO(cursoDAO);
+    }
+
+    @BeforeClass
+    public static void beforeClass() {
         FixtureFactoryLoader.loadTemplates("br.uff.id.bernardolopes.quadrohorarios.template");
     }
 

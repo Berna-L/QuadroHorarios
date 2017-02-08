@@ -38,8 +38,8 @@ public class TurmaControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void beforeClass() {
         FixtureFactoryLoader.loadTemplates("br.uff.id.bernardolopes.quadrohorarios.template");
     }
 
@@ -54,7 +54,6 @@ public class TurmaControllerTest {
     @Rollback
     public void postTurmaOK() {
         RequestTurma rt = Fixture.from(RequestTurma.class).gimme("valido");
-        rt.setCodigoDisciplina("TCC00173");
         ResponseEntity<Turma> response = restTemplate.postForEntity("/turmas", rt, Turma.class);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(rt.getCodigoTurma(), response.getBody().getCodigo());
@@ -65,6 +64,7 @@ public class TurmaControllerTest {
     @Test
     public void postTurmaSemCodigoDisciplinaDaErro() {
         RequestTurma rt = Fixture.from(RequestTurma.class).gimme("valido");
+        rt.setCodigoDisciplina(null);
         ResponseEntity<Turma> response = restTemplate.postForEntity("/turmas", rt, Turma.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
@@ -72,7 +72,6 @@ public class TurmaControllerTest {
     @Test
     public void postTurmaSemCodigoTurmaDaErro() {
         RequestTurma rt = Fixture.from(RequestTurma.class).gimme("valido");
-        rt.setCodigoDisciplina("TCC00173");
         rt.setCodigoTurma(null);
         ResponseEntity<Turma> response = restTemplate.postForEntity("/turmas", rt, Turma.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -81,7 +80,6 @@ public class TurmaControllerTest {
     @Test
     public void postTurmaSemAnoSemestreDaErro() {
         RequestTurma rt = Fixture.from(RequestTurma.class).gimme("valido");
-        rt.setCodigoDisciplina("TCC00173");
         rt.setAnoSemestre(null);
         ResponseEntity<Turma> response = restTemplate.postForEntity("/turmas", rt, Turma.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

@@ -59,6 +59,10 @@ public class TurmaServiceTest {
         disciplinaDAO = mock(DisciplinaDAO.class);
         service.setTurmaDAO(turmaDAO);
         service.setDisciplinaDAO(disciplinaDAO);
+    }
+
+    @BeforeClass
+    public static void beforeClass() {
         FixtureFactoryLoader.loadTemplates("br.uff.id.bernardolopes.quadrohorarios.template");
     }
 

@@ -38,8 +38,8 @@ public class DisciplinaControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void beforeClass() {
         FixtureFactoryLoader.loadTemplates("br.uff.id.bernardolopes.quadrohorarios.template");
     }
 
@@ -54,7 +54,6 @@ public class DisciplinaControllerTest {
     @Rollback
     public void postDisciplinaOK() {
         RequestDisciplina rd = Fixture.from(RequestDisciplina.class).gimme("valido");
-        rd.setCodigoCurso(31L);
         ResponseEntity<Disciplina> response = restTemplate.postForEntity("/disciplinas", rd, Disciplina.class);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(rd.getCodigoDisciplina(), response.getBody().getCodigo());
@@ -66,6 +65,7 @@ public class DisciplinaControllerTest {
     @Test
     public void postDisciplinaComCodigoCursoZeroDaErro() {
         RequestDisciplina rd = Fixture.from(RequestDisciplina.class).gimme("valido");
+        rd.setCodigoCurso(null);
         ResponseEntity<Disciplina> response = restTemplate.postForEntity("/disciplinas", rd, Disciplina.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
@@ -73,7 +73,6 @@ public class DisciplinaControllerTest {
     @Test
     public void postDisciplinaSemCodigoDisciciplinaDaErro() {
         RequestDisciplina rd = Fixture.from(RequestDisciplina.class).gimme("valido");
-        rd.setCodigoCurso(31L);
         rd.setCodigoDisciplina(null);
         ResponseEntity<Disciplina> response = restTemplate.postForEntity("/disciplinas", rd, Disciplina.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -82,7 +81,6 @@ public class DisciplinaControllerTest {
     @Test
     public void postDisciplinaSemNomeDaErro() {
         RequestDisciplina rd = Fixture.from(RequestDisciplina.class).gimme("valido");
-        rd.setCodigoCurso(31L);
         rd.setNome(null);
         ResponseEntity<Disciplina> response = restTemplate.postForEntity("/disciplinas", rd, Disciplina.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
