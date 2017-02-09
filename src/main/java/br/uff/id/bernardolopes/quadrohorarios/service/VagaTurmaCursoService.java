@@ -38,7 +38,7 @@ public class VagaTurmaCursoService {
 
     @Autowired
     private CursoDAO cursoDAO;
-    
+
     @Autowired
     private DisciplinaDAO disciplinaDAO;
 
@@ -125,7 +125,7 @@ public class VagaTurmaCursoService {
 
     public Map<String, Long> getQuantidadeVagasPorAnoSemestreParaDisciplina(Long id) {
         Disciplina d = disciplinaDAO.findOne(id);
-        if (d == null){
+        if (d == null) {
             throw new IllegalArgumentException("Disciplina não encontrada!");
         }
         List<Object[]> lista = vagaTurmaCursoDAO.getVagasByAnoSemestreForDisciplina(d);
@@ -145,22 +145,32 @@ public class VagaTurmaCursoService {
     }
 
     public List<Turma> getTurmasParaCursoEAnoSemestre(Curso curso, String anoSemestre) {
-        if (anoSemestre == null || anoSemestre.isEmpty()) {
-            Calendar cal = Calendar.getInstance();
-            anoSemestre = cal.get(Calendar.YEAR) + "_" + ((cal.get(Calendar.MONTH) / 6) + 1);
-        }
+        anoSemestre = anoSemestreInformadoOuAtual(anoSemestre);
         List<VagaTurmaCurso> listaVTC = vagaTurmaCursoDAO.findByCurso(curso);
         if (listaVTC.size() == 0) {
             throw new IllegalArgumentException("Nenhuma turma disponível para o curso informado!");
         }
+        List<Turma> turmas = listaTurmasDeUmAnoSemestre(listaVTC, anoSemestre);
+        if (turmas.isEmpty()) {
+            throw new IllegalArgumentException("Nenhuma turma disponível para o ano-semestre informado!");
+        }
+        return turmas;
+    }
+
+    private String anoSemestreInformadoOuAtual(String anoSemestre) {
+        if (anoSemestre == null || anoSemestre.isEmpty()) {
+            Calendar cal = Calendar.getInstance();
+            anoSemestre = cal.get(Calendar.YEAR) + "_" + ((cal.get(Calendar.MONTH) / 6) + 1);
+        }
+        return anoSemestre;
+    }
+
+    private List<Turma> listaTurmasDeUmAnoSemestre(List<VagaTurmaCurso> listaVTC, String anoSemestre) {
         List<Turma> turmas = new ArrayList<>();
         for (VagaTurmaCurso vtc : listaVTC) {
             if (vtc.getTurma().getAnoSemestre().equals(anoSemestre)) {
                 turmas.add(vtc.getTurma());
             }
-        }
-        if (turmas.isEmpty()) {
-            throw new IllegalArgumentException("Nenhuma turma disponível para o ano-semestre informado!");
         }
         return turmas;
     }
