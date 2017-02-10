@@ -18,7 +18,6 @@ import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;

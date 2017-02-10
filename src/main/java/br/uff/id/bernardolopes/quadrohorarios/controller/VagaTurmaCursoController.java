@@ -5,13 +5,10 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.controller;
 
-import br.uff.id.bernardolopes.quadrohorarios.controller.model.ResponseVagasInscritos;
-import br.uff.id.bernardolopes.quadrohorarios.model.Curso;
 import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
 import br.uff.id.bernardolopes.quadrohorarios.service.VagaTurmaCursoService;
 import java.io.IOException;
 import java.net.ProtocolException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
