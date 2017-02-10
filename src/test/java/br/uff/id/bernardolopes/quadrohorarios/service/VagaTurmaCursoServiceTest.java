@@ -42,8 +42,8 @@ import org.springframework.web.client.RestTemplate;
  *
  * @author bernardolopes at id.uff.br
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class VagaTurmaCursoServiceTest {
 
     private VagaTurmaCursoDAO vagaTurmaCursoDAO;
