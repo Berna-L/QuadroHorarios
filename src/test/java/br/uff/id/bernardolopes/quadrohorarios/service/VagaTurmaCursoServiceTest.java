@@ -43,6 +43,7 @@ public class VagaTurmaCursoServiceTest {
 
     private VagaTurmaCursoDAO vagaTurmaCursoDAO;
     private CursoDAO cursoDAO;
+    private TurmaDAO turmaDAO;
 
 //    @Autowired
     private VagaTurmaCursoService service;
@@ -57,8 +58,10 @@ public class VagaTurmaCursoServiceTest {
         service = new VagaTurmaCursoService();
         vagaTurmaCursoDAO = mock(VagaTurmaCursoDAO.class);
         cursoDAO = mock(CursoDAO.class);
+        turmaDAO = mock(TurmaDAO.class);
         service.setVagaTurmaCursoDAO(vagaTurmaCursoDAO);
         service.setCursoDAO(cursoDAO);
+        service.setTurmaDAO(turmaDAO);
     }
 
     @BeforeClass
@@ -150,28 +153,85 @@ public class VagaTurmaCursoServiceTest {
 
     /* Obtenção de vagas
     Testes para casos OK */
+//    @Test
+//    public void getVagasPorTurmaOK() {
+//        //Criação por fixture
+//        Turma t = Fixture.from(Turma.class).gimme("turma-disciplina-fixas");
+//        List<VagaTurmaCurso> listaEsperada = Fixture.from(VagaTurmaCurso.class).gimme(15, "turma-disciplina-fixas");
+//        //Configuração do mock
+//        when(vagaTurmaCursoDAO.findByTurma(t)).thenReturn(listaEsperada);
+//        //Hora do show
+//        Map<Curso, Integer> mapa = service.getVagasPorCurso(t);
+//        //Asserções de valor
+//        for (VagaTurmaCurso vtc : listaEsperada) {
+//            assertEquals(vtc.getVagas(), mapa.get(vtc.getCurso()));
+//        }
+//        //Verificação de chamadas
+//        verify(vagaTurmaCursoDAO).findByTurma(t);;
+//    }
+//
+//    /* Criação de turma
+//    Testes para exceções*/
+//    @Test(expected = IllegalArgumentException.class)
+//    public void getVagasPorTurmaComNuloDaErro() {
+//        service.getVagasPorCurso(null);
+//    }
+//    
+    /*
+    Obtenção de vagas
+    Testes para casos OK
+     */
     @Test
-    public void getVagasPorTurmaOK() {
+    public void getListaVagasEmTurmaPorCursoComObjetoOK() {
         //Criação por fixture
         Turma t = Fixture.from(Turma.class).gimme("turma-disciplina-fixas");
         List<VagaTurmaCurso> listaEsperada = Fixture.from(VagaTurmaCurso.class).gimme(15, "turma-disciplina-fixas");
         //Configuração do mock
         when(vagaTurmaCursoDAO.findByTurma(t)).thenReturn(listaEsperada);
         //Hora do show
-        Map<Curso, Integer> mapa = service.getVagasPorCurso(t);
+        Map<Long, Integer> mapa = service.getListaVagasEmTurmaPorCurso(t);
         //Asserções de valor
         for (VagaTurmaCurso vtc : listaEsperada) {
-            assertEquals(vtc.getVagas(), mapa.get(vtc.getCurso()));
+            Long codigoCurso = vtc.getCurso().getCodigo();
+            assertTrue(mapa.keySet().contains(codigoCurso));
+            assertEquals(vtc.getVagas(), mapa.get(codigoCurso));
         }
-        //Verificação de chamadas
-        verify(vagaTurmaCursoDAO).findByTurma(t);;
     }
 
-    /* Criação de turma
-    Testes para exceções*/
+    @Test
+    public void getListaVagasEmTurmaPorCursoComIdOK() {
+        //Criação por fixture
+        Turma t = Fixture.from(Turma.class).gimme("turma-disciplina-fixas");
+        List<VagaTurmaCurso> listaEsperada = Fixture.from(VagaTurmaCurso.class).gimme(15, "turma-disciplina-fixas");
+        //Configuração do mock
+        when(turmaDAO.findOne(t.getId())).thenReturn(t);
+        when(vagaTurmaCursoDAO.findByTurma(t)).thenReturn(listaEsperada);
+        //Hora do show
+        Map<Long, Integer> mapa = service.getListaVagasEmTurmaPorCurso(t.getId());
+        //Asserções de valor
+        for (VagaTurmaCurso vtc : listaEsperada) {
+            Long codigoCurso = vtc.getCurso().getCodigo();
+            assertTrue(mapa.keySet().contains(codigoCurso));
+            assertEquals(vtc.getVagas(), mapa.get(codigoCurso));
+        }
+    }
+
+    /*
+    Obtenção de vagas
+    Testes para exceções
+     */
     @Test(expected = IllegalArgumentException.class)
-    public void getVagasPorTurmaComNuloDaErro() {
-        service.getVagasPorCurso(null);
+    public void getListaVagasEmTurmaPorCursoComIdInexistenteDaErro() {
+        //Configuração do mock
+        when(turmaDAO.findOne(Long.MAX_VALUE)).thenReturn(null);
+//        when(vagaTurmaCursoDAO.findByTurma(t)).thenReturn(listaEsperada);
+        //Exceção aqui
+        service.getListaVagasEmTurmaPorCurso(Long.MAX_VALUE);
     }
-
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void getListaVagasEmTurmaPorCursoComObjetoNuloDaErro() {
+        //Exceção aqui
+        service.getListaVagasEmTurmaPorCurso((Turma) null);
+    }
 }

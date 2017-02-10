@@ -45,7 +45,7 @@ public class VagaTurmaCursoService {
 
     @Autowired
     private DisciplinaDAO disciplinaDAO;
-    
+
     @Autowired
     private RestTemplate rest;
 
@@ -60,6 +60,10 @@ public class VagaTurmaCursoService {
 
     public void setCursoDAO(CursoDAO cursoDAO) {
         this.cursoDAO = cursoDAO;
+    }
+
+    public void setTurmaDAO(TurmaDAO turmaDAO) {
+        this.turmaDAO = turmaDAO;
     }
 
     public VagaTurmaCurso criarVagaTurmaCurso(RequestVagaTurmaCurso request) {
@@ -101,18 +105,17 @@ public class VagaTurmaCursoService {
         }
     }
 
-    public Map<Curso, Integer> getVagasPorCurso(Turma turma) {
-        if (turma == null) {
-            throw new IllegalArgumentException("Turma não pode ser nulo!");
-        }
-        List<VagaTurmaCurso> lista = vagaTurmaCursoDAO.findByTurma(turma);
-        Map<Curso, Integer> relacaoVagas = new HashMap<>();
-        for (VagaTurmaCurso entrada : lista) {
-            relacaoVagas.put(entrada.getCurso(), entrada.getVagas());
-        }
-        return relacaoVagas;
-    }
-
+//    public Map<Curso, Integer> getVagasPorCurso(Turma turma) {
+//        if (turma == null) {
+//            throw new IllegalArgumentException("Turma não pode ser nulo!");
+//        }
+//        List<VagaTurmaCurso> lista = vagaTurmaCursoDAO.findByTurma(turma);
+//        Map<Curso, Integer> relacaoVagas = new HashMap<>();
+//        for (VagaTurmaCurso entrada : lista) {
+//            relacaoVagas.put(entrada.getCurso(), entrada.getVagas());
+//        }
+//        return relacaoVagas;
+//    }
     public Map<Long, Long> getQuantidadeTurmasPorCurso() {
         List<Object[]> lista = vagaTurmaCursoDAO.getCountByCurso();
         Map<Long, Long> mapa = new HashMap<>();
@@ -183,19 +186,22 @@ public class VagaTurmaCursoService {
         }
         return turmas;
     }
-    
-    public Map<Long, Integer> getListaVagasEmTurmaPorCurso(Long id){
+
+    public Map<Long, Integer> getListaVagasEmTurmaPorCurso(Long id) {
         Turma turma = turmaDAO.findOne(id);
-        if (turma == null){
-            throw new IllegalArgumentException("Turma informada inválida!");
+        if (turma == null) {
+            throw new IllegalArgumentException("Turma não encontrada com ID informado!");
         }
         return getListaVagasEmTurmaPorCurso(turma);
     }
-    
-    public Map<Long, Integer> getListaVagasEmTurmaPorCurso(Turma turma){
+
+    public Map<Long, Integer> getListaVagasEmTurmaPorCurso(Turma turma) {
+        if (turma == null) {
+            throw new IllegalArgumentException("Turma inválida!");
+        }
         List<VagaTurmaCurso> lista = vagaTurmaCursoDAO.findByTurma(turma);
         Map<Long, Integer> mapa = new HashMap<>();
-        for (VagaTurmaCurso vtc : lista){
+        for (VagaTurmaCurso vtc : lista) {
             mapa.put(vtc.getCurso().getCodigo(), vtc.getVagas());
         }
         return mapa;
@@ -203,37 +209,29 @@ public class VagaTurmaCursoService {
 
     public Map<Long, Integer> getListaInscritosEmTurmaPorCurso(Long id) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
         Turma turma = turmaDAO.findOne(id);
-        if (turma == null){
-            throw new IllegalArgumentException("Turma informada inválida!");
+        if (turma == null) {
+            throw new IllegalArgumentException("Turma não encontrada com ID informado!");
         }
         return VagaTurmaCursoService.this.getListaInscritosEmTurmaPorCurso(turma);
     }
-    
+
     public Map<Long, Integer> getListaInscritosEmTurmaPorCurso(Turma turma) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
         return getListaInscritosEmTurmaPorCurso(turma, REST_URL);
     }
 
-    public Map<Long, Integer> getListaInscritosEmTurmaPorCurso(Turma turma, String url) throws IOException, InstantiationException {
-        Map<Long, Integer> resultadoId = rest.getForObject(url + turma.getId(), Map.class);
-//        Map<Curso, Integer> resultadoObj = new HashMap<>();
-//        for (String k : resultadoId.keySet()) {
-//            long kLong = Long.parseLong(k);
-//            Curso c = cursoDAO.getOne(kLong);
-//            if (c == null) {
-//                throw new InstantiationException("Um curso retornado não existe no nosso banco...");
-//            }
-//            resultadoObj.put(c, resultadoId.get(k));
-//        }
-        return resultadoId;
+    public Map<Long, Integer> getListaInscritosEmTurmaPorCurso(Long id, String url) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
+        Turma turma = turmaDAO.findOne(id);
+        if (turma == null) {
+            throw new IllegalArgumentException("Turma não encontrada com ID informado!");
+        }
+        return VagaTurmaCursoService.this.getListaInscritosEmTurmaPorCurso(turma, url);
     }
 
-//    public Map<Curso, Integer> fakeGetInscritosPorCurso(Turma turma) {
-//        //NOTHING IS REAL ANYMORE
-//        Map<Curso, Integer> relacaoVagas = getVagasPorCurso(turma);
-//        Map<Curso, Integer> relacaoInscritos = new HashMap<>();
-//        for (Curso curso : relacaoVagas.keySet()) {
-//            relacaoInscritos.put(curso, (int) Math.floor(Math.random() * relacaoVagas.get(curso).doubleValue()));
-//        }
-//        return relacaoInscritos;
-//    }
+    public Map<Long, Integer> getListaInscritosEmTurmaPorCurso(Turma turma, String url) throws IOException, InstantiationException {
+        if (turma == null) {
+            throw new IllegalArgumentException("Turma inválida!");
+        }
+        Map<Long, Integer> resultadoId = rest.getForObject(url + turma.getId(), Map.class);
+        return resultadoId;
+    }
 }
