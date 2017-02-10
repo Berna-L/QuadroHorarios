@@ -183,20 +183,37 @@ public class VagaTurmaCursoService {
         }
         return turmas;
     }
-
-    public Map<Long, Integer> getListaAlunosPorCursoEmTurma(Long id) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
+    
+    public Map<Long, Integer> getListaVagasEmTurmaPorCurso(Long id){
         Turma turma = turmaDAO.findOne(id);
         if (turma == null){
             throw new IllegalArgumentException("Turma informada inválida!");
         }
-        return getListaAlunosPorCursoEmTurma(turma);
+        return getListaVagasEmTurmaPorCurso(turma);
     }
     
-    public Map<Long, Integer> getListaAlunosPorCursoEmTurma(Turma turma) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
-        return getListaAlunosPorCursoEmTurma(turma, REST_URL);
+    public Map<Long, Integer> getListaVagasEmTurmaPorCurso(Turma turma){
+        List<VagaTurmaCurso> lista = vagaTurmaCursoDAO.findByTurma(turma);
+        Map<Long, Integer> mapa = new HashMap<>();
+        for (VagaTurmaCurso vtc : lista){
+            mapa.put(vtc.getCurso().getCodigo(), vtc.getVagas());
+        }
+        return mapa;
     }
 
-    public Map<Long, Integer> getListaAlunosPorCursoEmTurma(Turma turma, String url) throws IOException, InstantiationException {
+    public Map<Long, Integer> getListaInscritosEmTurmaPorCurso(Long id) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
+        Turma turma = turmaDAO.findOne(id);
+        if (turma == null){
+            throw new IllegalArgumentException("Turma informada inválida!");
+        }
+        return VagaTurmaCursoService.this.getListaInscritosEmTurmaPorCurso(turma);
+    }
+    
+    public Map<Long, Integer> getListaInscritosEmTurmaPorCurso(Turma turma) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
+        return getListaInscritosEmTurmaPorCurso(turma, REST_URL);
+    }
+
+    public Map<Long, Integer> getListaInscritosEmTurmaPorCurso(Turma turma, String url) throws IOException, InstantiationException {
         Map<Long, Integer> resultadoId = rest.getForObject(url + turma.getId(), Map.class);
 //        Map<Curso, Integer> resultadoObj = new HashMap<>();
 //        for (String k : resultadoId.keySet()) {

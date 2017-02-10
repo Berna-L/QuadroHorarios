@@ -5,10 +5,13 @@
  */
 package br.uff.id.bernardolopes.quadrohorarios.controller;
 
+import br.uff.id.bernardolopes.quadrohorarios.controller.model.ResponseVagasInscritos;
 import br.uff.id.bernardolopes.quadrohorarios.model.Turma;
 import br.uff.id.bernardolopes.quadrohorarios.service.VagaTurmaCursoService;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,11 +54,27 @@ public class VagaTurmaCursoController {
         Map<String, Long> resultado = service.getQuantidadeVagasPorAnoSemestreParaDisciplina(id);
         return ResponseEntity.ok(resultado);
     }
-    
-    @GetMapping(value = "/turmas/vagasInscritos/{id}")
-    public ResponseEntity<Map<Long, Integer>> getVagasEInscritosPorCursoParaTurma(@PathVariable Long id) throws InstantiationException, ProtocolException, IOException, IOException {
-        Map<Long, Integer> resultado = service.getListaAlunosPorCursoEmTurma(id);
+
+    @GetMapping(value = "/turmas/{id}/inscritos")
+    public ResponseEntity<Map<Long, Integer>> getInscritosPorCursoParaTurma(@PathVariable Long id) throws InstantiationException, ProtocolException, IOException, IOException {
+        Map<Long, Integer> resultado = service.getListaInscritosEmTurmaPorCurso(id);
         return ResponseEntity.ok(resultado);
     }
-        
+
+    @GetMapping(value = "/turmas/{id}/vagasInscritos")
+    public ResponseEntity<List<ResponseVagasInscritos>> getVagasEInscritosPorCursoParaTurma(@PathVariable Long id) throws ProtocolException, IOException, InstantiationException, InstantiationException, MalformedURLException, InstantiationException {
+        Map<Long, Integer> inscritos = service.getListaInscritosEmTurmaPorCurso(id);
+        Map<Long, Integer> vagas = service.getListaVagasEmTurmaPorCurso(id);
+        return ResponseEntity.ok(construtorResponseVagasInscritos(vagas, inscritos));
+    }
+    
+    private List<ResponseVagasInscritos> construtorResponseVagasInscritos(Map<Long, Integer> vagas, Map<Long, Integer> inscritos){
+        List<ResponseVagasInscritos> response = new ArrayList<>();
+        for (Long k : vagas.keySet()){ //Teoricamente não teremos um curso com inscritos, mas sem vagas, logo keySet de vagas é superset do keySet de inscritos
+            ResponseVagasInscritos rvi = new ResponseVagasInscritos(k, vagas.get(k), inscritos.get(k.toString()));
+            response.add(rvi);
+        }
+        return response;
+    }
+
 }
