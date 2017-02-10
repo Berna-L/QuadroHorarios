@@ -56,19 +56,19 @@ public class VagaTurmaCursoController {
     }
 
     @GetMapping(value = "/turmas/{id}/inscritos")
-    public ResponseEntity<Map<Long, Integer>> getInscritosPorCursoParaTurma(@PathVariable Long id) throws InstantiationException, ProtocolException, IOException, IOException {
-        Map<Long, Integer> resultado = service.getListaInscritosEmTurmaPorCurso(id);
+    public ResponseEntity<Map<String, Integer>> getInscritosPorCursoParaTurma(@PathVariable Long id) throws InstantiationException, ProtocolException, IOException, IOException {
+        Map<String, Integer> resultado = service.getListaInscritosEmTurmaPorCurso(id);
         return ResponseEntity.ok(resultado);
     }
 
     @GetMapping(value = "/turmas/{id}/vagasInscritos")
     public ResponseEntity<List<ResponseVagasInscritos>> getVagasEInscritosPorCursoParaTurma(@PathVariable Long id) throws ProtocolException, IOException, InstantiationException, InstantiationException, MalformedURLException, InstantiationException {
-        Map<Long, Integer> inscritos = service.getListaInscritosEmTurmaPorCurso(id);
+        Map<String, Integer> inscritos = service.getListaInscritosEmTurmaPorCurso(id);
         Map<Long, Integer> vagas = service.getListaVagasEmTurmaPorCurso(id);
         return ResponseEntity.ok(construtorResponseVagasInscritos(vagas, inscritos));
     }
     
-    private List<ResponseVagasInscritos> construtorResponseVagasInscritos(Map<Long, Integer> vagas, Map<Long, Integer> inscritos){
+    private List<ResponseVagasInscritos> construtorResponseVagasInscritos(Map<Long, Integer> vagas, Map<String, Integer> inscritos){
         List<ResponseVagasInscritos> response = new ArrayList<>();
         for (Long k : vagas.keySet()){ //Teoricamente não teremos um curso com inscritos, mas sem vagas, logo keySet de vagas é superset do keySet de inscritos
             ResponseVagasInscritos rvi = new ResponseVagasInscritos(k, vagas.get(k), inscritos.get(k.toString()));

@@ -66,6 +66,10 @@ public class VagaTurmaCursoService {
         this.turmaDAO = turmaDAO;
     }
 
+    public void setRest(RestTemplate rest) {
+        this.rest = rest;
+    }
+    
     public VagaTurmaCurso criarVagaTurmaCurso(RequestVagaTurmaCurso request) {
         if (request.isValid()) {
             return criarVagaTurmaCurso(request.getIdTurma(), request.getIdCurso(), request.getVagas());
@@ -207,7 +211,7 @@ public class VagaTurmaCursoService {
         return mapa;
     }
 
-    public Map<Long, Integer> getListaInscritosEmTurmaPorCurso(Long id) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
+    public Map<String, Integer> getListaInscritosEmTurmaPorCurso(Long id) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
         Turma turma = turmaDAO.findOne(id);
         if (turma == null) {
             throw new IllegalArgumentException("Turma não encontrada com ID informado!");
@@ -215,11 +219,11 @@ public class VagaTurmaCursoService {
         return VagaTurmaCursoService.this.getListaInscritosEmTurmaPorCurso(turma);
     }
 
-    public Map<Long, Integer> getListaInscritosEmTurmaPorCurso(Turma turma) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
+    public Map<String, Integer> getListaInscritosEmTurmaPorCurso(Turma turma) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
         return getListaInscritosEmTurmaPorCurso(turma, REST_URL);
     }
 
-    public Map<Long, Integer> getListaInscritosEmTurmaPorCurso(Long id, String url) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
+    public Map<String, Integer> getListaInscritosEmTurmaPorCurso(Long id, String url) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
         Turma turma = turmaDAO.findOne(id);
         if (turma == null) {
             throw new IllegalArgumentException("Turma não encontrada com ID informado!");
@@ -227,11 +231,11 @@ public class VagaTurmaCursoService {
         return VagaTurmaCursoService.this.getListaInscritosEmTurmaPorCurso(turma, url);
     }
 
-    public Map<Long, Integer> getListaInscritosEmTurmaPorCurso(Turma turma, String url) throws IOException, InstantiationException {
+    public Map<String, Integer> getListaInscritosEmTurmaPorCurso(Turma turma, String url) throws IOException, InstantiationException {
         if (turma == null) {
             throw new IllegalArgumentException("Turma inválida!");
         }
-        Map<Long, Integer> resultadoId = rest.getForObject(url + turma.getId(), Map.class);
+        Map<String, Integer> resultadoId = rest.getForObject(url + turma.getId(), Map.class);
         return resultadoId;
     }
 }

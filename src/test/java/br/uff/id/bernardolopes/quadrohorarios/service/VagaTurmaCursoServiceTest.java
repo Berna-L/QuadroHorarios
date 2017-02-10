@@ -15,7 +15,10 @@ import br.uff.id.bernardolopes.quadrohorarios.repository.CursoDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
+import java.io.IOException;
+import java.net.ProtocolException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.After;
@@ -31,7 +34,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -44,6 +49,7 @@ public class VagaTurmaCursoServiceTest {
     private VagaTurmaCursoDAO vagaTurmaCursoDAO;
     private CursoDAO cursoDAO;
     private TurmaDAO turmaDAO;
+    private RestTemplate rest;
 
 //    @Autowired
     private VagaTurmaCursoService service;
@@ -59,9 +65,11 @@ public class VagaTurmaCursoServiceTest {
         vagaTurmaCursoDAO = mock(VagaTurmaCursoDAO.class);
         cursoDAO = mock(CursoDAO.class);
         turmaDAO = mock(TurmaDAO.class);
+        rest = mock(RestTemplate.class);
         service.setVagaTurmaCursoDAO(vagaTurmaCursoDAO);
         service.setCursoDAO(cursoDAO);
         service.setTurmaDAO(turmaDAO);
+        service.setRest(rest);
     }
 
     @BeforeClass
@@ -185,7 +193,7 @@ public class VagaTurmaCursoServiceTest {
     public void getListaVagasEmTurmaPorCursoComObjetoOK() {
         //Criação por fixture
         Turma t = Fixture.from(Turma.class).gimme("turma-disciplina-fixas");
-        List<VagaTurmaCurso> listaEsperada = Fixture.from(VagaTurmaCurso.class).gimme(15, "turma-disciplina-fixas");
+        List<VagaTurmaCurso> listaEsperada = Fixture.from(VagaTurmaCurso.class).gimme(3, "turma-disciplina-fixas");
         //Configuração do mock
         when(vagaTurmaCursoDAO.findByTurma(t)).thenReturn(listaEsperada);
         //Hora do show
@@ -193,7 +201,7 @@ public class VagaTurmaCursoServiceTest {
         //Asserções de valor
         for (VagaTurmaCurso vtc : listaEsperada) {
             Long codigoCurso = vtc.getCurso().getCodigo();
-            assertTrue(mapa.keySet().contains(codigoCurso));
+            assertTrue(mapa.containsKey(codigoCurso));
             assertEquals(vtc.getVagas(), mapa.get(codigoCurso));
         }
     }
@@ -202,7 +210,7 @@ public class VagaTurmaCursoServiceTest {
     public void getListaVagasEmTurmaPorCursoComIdOK() {
         //Criação por fixture
         Turma t = Fixture.from(Turma.class).gimme("turma-disciplina-fixas");
-        List<VagaTurmaCurso> listaEsperada = Fixture.from(VagaTurmaCurso.class).gimme(15, "turma-disciplina-fixas");
+        List<VagaTurmaCurso> listaEsperada = Fixture.from(VagaTurmaCurso.class).gimme(3, "turma-disciplina-fixas");
         //Configuração do mock
         when(turmaDAO.findOne(t.getId())).thenReturn(t);
         when(vagaTurmaCursoDAO.findByTurma(t)).thenReturn(listaEsperada);
@@ -211,7 +219,7 @@ public class VagaTurmaCursoServiceTest {
         //Asserções de valor
         for (VagaTurmaCurso vtc : listaEsperada) {
             Long codigoCurso = vtc.getCurso().getCodigo();
-            assertTrue(mapa.keySet().contains(codigoCurso));
+            assertTrue(mapa.containsKey(codigoCurso));
             assertEquals(vtc.getVagas(), mapa.get(codigoCurso));
         }
     }
@@ -228,9 +236,72 @@ public class VagaTurmaCursoServiceTest {
         //Exceção aqui
         service.getListaVagasEmTurmaPorCurso(Long.MAX_VALUE);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void getListaVagasEmTurmaPorCursoComObjetoNuloDaErro() {
+        //Exceção aqui
+        service.getListaVagasEmTurmaPorCurso((Turma) null);
+    }
+
+    /*
+    Obtenção de inscritos
+    Testes para casos OK
+     */
+    @Test
+    public void getListaInscritosEmTurmaPorCursoComObjetoOK() throws IOException, InstantiationException {
+        //Criação por fixture
+        Turma t = Fixture.from(Turma.class).gimme("turma-disciplina-fixas");
+        //Configuração do mock rest
+        Map<String, Integer> mapaEsperado = new HashMap<>();
+        mapaEsperado.put("31", 5);
+        mapaEsperado.put("32", 7);
+        mapaEsperado.put("33", 10);
+        when(rest.getForObject("http://test" + t.getId(), Map.class)).thenReturn(mapaEsperado);
+        //Hora do show
+        Map<String, Integer> mapa = service.getListaInscritosEmTurmaPorCurso(t, "http://test");
+        //Asserções de valor
+        for (String k : mapaEsperado.keySet()) {
+            assertTrue(mapa.containsKey(k));
+            assertEquals(mapaEsperado.get(k), mapa.get(k));
+        }
+    }
+
+    @Test
+    public void getListaInscritosEmTurmaPorCursoComIdOK() throws IOException, InstantiationException {
+        //Criação por fixture
+        Turma t = Fixture.from(Turma.class).gimme("turma-disciplina-fixas");
+        //Configuração do mock
+        when(turmaDAO.findOne(t.getId())).thenReturn(t);
+        //Configuração do mock rest
+        Map<String, Integer> mapaEsperado = new HashMap<>();
+        mapaEsperado.put("31", 5);
+        mapaEsperado.put("32", 7);
+        mapaEsperado.put("33", 10);
+        when(rest.getForObject("http://test" + t.getId(), Map.class)).thenReturn(mapaEsperado);
+        //Hora do show
+        Map<String, Integer> mapa = service.getListaInscritosEmTurmaPorCurso(t.getId(), "http://test");
+        //Asserções de valor
+        for (String k : mapaEsperado.keySet()) {
+            assertTrue(mapa.containsKey(k));
+            assertEquals(mapaEsperado.get(k), mapa.get(k));
+        }
+    }
+
+    /*
+    Obtenção de inscritos
+    Testes para exceções
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getListaInscritosEmTurmaPorCursoComIdInexistenteDaErro() throws ProtocolException, IOException, InstantiationException {
+        //Configuração do mock
+        when(turmaDAO.findOne(Long.MAX_VALUE)).thenReturn(null);
+//        when(vagaTurmaCursoDAO.findByTurma(t)).thenReturn(listaEsperada);
+        //Exceção aqui
+        service.getListaInscritosEmTurmaPorCurso(Long.MAX_VALUE);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getListaInscritosEmTurmaPorCursoComObjetoNuloDaErro() {
         //Exceção aqui
         service.getListaVagasEmTurmaPorCurso((Turma) null);
     }
