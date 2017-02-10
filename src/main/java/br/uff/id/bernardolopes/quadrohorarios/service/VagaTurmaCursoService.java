@@ -15,6 +15,10 @@ import br.uff.id.bernardolopes.quadrohorarios.repository.CursoDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -22,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -41,6 +46,11 @@ public class VagaTurmaCursoService {
 
     @Autowired
     private DisciplinaDAO disciplinaDAO;
+    
+    @Autowired
+    private RestTemplate rest;
+
+    private static final String REST_URL = "http://secure-meadow-72222.herokuapp.com/api/inscricoes/?turma_id=";
 
     public VagaTurmaCursoService() {
     }
@@ -173,6 +183,32 @@ public class VagaTurmaCursoService {
             }
         }
         return turmas;
+    }
+
+    public Map<Long, Integer> getListaAlunosPorCursoEmTurma(Long id) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
+        Turma turma = turmaDAO.findOne(id);
+        if (turma == null){
+            throw new IllegalArgumentException("Turma informada inválida!");
+        }
+        return getListaAlunosPorCursoEmTurma(turma);
+    }
+    
+    public Map<Long, Integer> getListaAlunosPorCursoEmTurma(Turma turma) throws MalformedURLException, ProtocolException, IOException, InstantiationException {
+        return getListaAlunosPorCursoEmTurma(turma, REST_URL);
+    }
+
+    public Map<Long, Integer> getListaAlunosPorCursoEmTurma(Turma turma, String url) throws IOException, InstantiationException {
+        Map<Long, Integer> resultadoId = rest.getForObject(url + turma.getId(), Map.class);
+//        Map<Curso, Integer> resultadoObj = new HashMap<>();
+//        for (String k : resultadoId.keySet()) {
+//            long kLong = Long.parseLong(k);
+//            Curso c = cursoDAO.getOne(kLong);
+//            if (c == null) {
+//                throw new InstantiationException("Um curso retornado não existe no nosso banco...");
+//            }
+//            resultadoObj.put(c, resultadoId.get(k));
+//        }
+        return resultadoId;
     }
 
 //    public Map<Curso, Integer> fakeGetInscritosPorCurso(Turma turma) {
