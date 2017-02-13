@@ -71,7 +71,7 @@ public class VagaTurmaCursoController {
     private List<ResponseVagasInscritos> construtorResponseVagasInscritos(Map<Long, Integer> vagas, Map<String, Integer> inscritos){
         List<ResponseVagasInscritos> response = new ArrayList<>();
         for (Long k : vagas.keySet()){ //Teoricamente não teremos um curso com inscritos, mas sem vagas, logo keySet de vagas é superset do keySet de inscritos
-            int inscritosAtual = inscritos.get(k.toString()) == null ? inscritos.get(k.toString()) : 0;
+            int inscritosAtual = inscritos.containsKey(k.toString()) ? inscritos.get(k.toString()) : 0;
             ResponseVagasInscritos rvi = new ResponseVagasInscritos(k, vagas.get(k), inscritosAtual);
             response.add(rvi);
         }
