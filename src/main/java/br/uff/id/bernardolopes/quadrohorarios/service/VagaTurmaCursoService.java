@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -69,45 +70,41 @@ public class VagaTurmaCursoService {
     public void setRest(RestTemplate rest) {
         this.rest = rest;
     }
-    
-    public VagaTurmaCurso criarVagaTurmaCurso(RequestVagaTurmaCurso request) {
-        if (request.isValid()) {
-            return criarVagaTurmaCurso(request.getIdTurma(), request.getIdCurso(), request.getVagas());
-        } else {
-            throw new IllegalArgumentException("Requisição inválida!");
-        }
-    }
 
-    public VagaTurmaCurso criarVagaTurmaCurso(Long idTurma, Long idCurso, Integer vagas) {
-        Turma turma = turmaDAO.getOne(idTurma);
-        if (turma == null) {
-            throw new IllegalArgumentException("Turma não encontrada!");
-        }
-        Curso curso = cursoDAO.getOne(idCurso);
-        if (curso == null) {
-            throw new IllegalArgumentException("Curso não encontrado!");
-        }
-        return criarVagaTurmaCurso(turma, curso, vagas);
-    }
-
-    public VagaTurmaCurso criarVagaTurmaCurso(Turma turma, Curso curso, Integer vagas) {
-        if (vagaTurmaCursoDAO.findByTurmaAndCurso(turma, curso).isEmpty()) {
-            if (turma == null) {
-                throw new IllegalArgumentException("Turma não pode ser nulo!");
-            }
-            if (curso == null) {
-                throw new IllegalArgumentException("Curso não pode ser nulo!");
-            }
-            if (vagas < 1) {
-                throw new IllegalArgumentException("Vagas precisa ser positivo!");
-            }
-            VagaTurmaCurso vtc = new VagaTurmaCurso(turma, curso, vagas);
-            vagaTurmaCursoDAO.save(vtc);
-            return vtc;
-        } else {
-            throw new InstanceAlreadyExistsException();
-        }
-    }
+//    public VagaTurmaCurso criarVagaTurmaCurso(RequestVagaTurmaCurso request) {
+//        if (request.isValid()) {
+//            return criarVagaTurmaCurso(request.getIdTurma(), request.getIdCurso(), request.getVagas());
+//        } else {
+//            throw new IllegalArgumentException("Requisição inválida!");
+//        }
+//    }
+//
+//    public VagaTurmaCurso criarVagaTurmaCurso(Long idTurma, Long idCurso, Integer vagas) {
+//        Optional<Turma> turma = Optional.ofNullable(turmaDAO.getOne(idTurma));
+//        if (!turma.isPresent()) {
+//            throw new IllegalArgumentException("Turma não encontrada!");
+//        }
+//        Optional<Curso> curso = Optional.ofNullable(cursoDAO.getOne(idCurso));
+//        if (!curso.isPresent()) {
+//            throw new IllegalArgumentException("Curso não encontrado!");
+//        }
+//        return criarVagaTurmaCurso(turma, curso, vagas);
+//    }
+//
+//    public VagaTurmaCurso criarVagaTurmaCurso(Optional<Turma> turma, Optional<Curso> curso, Integer vagas) {
+//        Turma turmaNaoOpt = turma.orElseThrow(() -> new IllegalArgumentException("Turma não pode ser nulo!"));
+//        Curso cursoNaoOpt = curso.orElseThrow(() -> new IllegalArgumentException("Curso não pode ser nulo!"));
+//        if (vagas < 1) {
+//            throw new IllegalArgumentException("Vagas precisa ser positivo!");
+//        }
+//        if (vagaTurmaCursoDAO.findByTurmaAndCurso(turmaNaoOpt, cursoNaoOpt).isEmpty()) {
+//            VagaTurmaCurso vtc = new VagaTurmaCurso(turmaNaoOpt, cursoNaoOpt, vagas);
+//            vagaTurmaCursoDAO.save(vtc);
+//            return vtc;
+//        } else {
+//            throw new InstanceAlreadyExistsException();
+//        }
+//    }
 
 //    public Map<Curso, Integer> getVagasPorCurso(Turma turma) {
 //        if (turma == null) {
