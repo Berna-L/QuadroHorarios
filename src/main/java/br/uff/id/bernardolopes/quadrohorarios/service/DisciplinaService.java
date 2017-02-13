@@ -15,6 +15,7 @@ import br.uff.id.bernardolopes.quadrohorarios.controller.model.RequestDisciplina
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DisciplinaService {
 
-     Logger logger = LoggerFactory.getLogger(DisciplinaController.class);
-   
+    Logger logger = LoggerFactory.getLogger(DisciplinaController.class);
+
     @Autowired
     private DisciplinaDAO disciplinaDAO;
 
@@ -47,46 +48,37 @@ public class DisciplinaService {
     public void setCursoDAO(CursoDAO cursoDAO) {
         this.cursoDAO = cursoDAO;
     }
-    
-    public List<Disciplina> getDisciplinas(){
+
+    public List<Disciplina> getDisciplinas() {
         return disciplinaDAO.findAll();
     }
-    
-    public Disciplina getDisciplina(Long id){
+
+    public Disciplina getDisciplina(Long id) {
         return disciplinaDAO.findOne(id);
     }
-    
-    public Disciplina criarDisciplina(RequestDisciplina request){
-        if (request != null && request.isValid()){
-            return criarDisciplina(request.getCodigoDisciplina(), request.getNome(), request.getCodigoCurso());
+
+    public Disciplina criarDisciplina(RequestDisciplina request) {
+        if (request != null && request.isValid()) {
+            return criarDisciplina(Optional.of(request.getCodigoDisciplina()), Optional.of(request.getNome()), request.getCodigoCurso());
         } else {
             throw new IllegalArgumentException("Requisição inválida!");
         }
     }
 
-    public Disciplina criarDisciplina(String codigoDisciplina, String nome, Long codigoCurso) throws InstanceAlreadyExistsException {
-        Curso curso = cursoDAO.findOne(codigoCurso);
+    public Disciplina criarDisciplina(Optional<String> codigoDisciplina, Optional<String> nome, Long codigoCurso) throws InstanceAlreadyExistsException {
+        Optional cursoOpt = Optional.ofNullable(cursoDAO.findOne(codigoCurso));
 //        logger.info("Curso {}", curso);
 //        logger.info("Curso. {}", curso.getCodigo());
-        if (curso == null){
-            throw new IllegalArgumentException("Curso não encontrado com código " + codigoCurso);
-        }
+        return criarDisciplina(codigoDisciplina, nome, cursoOpt);
 //        logger.info("Curso! {}");
-        return criarDisciplina(codigoDisciplina, nome, curso);
     }
-    
-    public Disciplina criarDisciplina(String codigoDisciplina, String nome, Curso curso) throws InstanceAlreadyExistsException {
-        if (disciplinaDAO.findByCodigo(codigoDisciplina).isEmpty()) { //Se já existe disciplina com código, não pode criar outra
-            if (codigoDisciplina == null){
-                throw new IllegalArgumentException("Código da disciplina não pode ser nulo!");
-            }
-            if (nome == null){
-                throw new IllegalArgumentException("Nome da disciplina não pode ser nulo!");
-            }
-            if (curso == null){
-                throw new IllegalArgumentException("Curso não pode ser nulo!");
-            }
-            Disciplina d = new Disciplina(codigoDisciplina, nome, curso);
+
+    public Disciplina criarDisciplina(Optional<String> codigoDisciplina, Optional<String> nome, Optional<Curso> curso) throws InstanceAlreadyExistsException {
+        String nomeNaoOpt = nome.orElseThrow(() -> new IllegalArgumentException("Nome da disciplina não pode ser nulo!"));
+        Curso cursoNaoOpt = curso.orElseThrow(() -> new IllegalArgumentException("Curso não pode ser nulo!"));
+        String codigoDisciplinaNaoOpt = codigoDisciplina.orElseThrow(() -> new IllegalArgumentException("Código da disciplina não pode ser nulo"));
+        if (disciplinaDAO.findByCodigo(codigoDisciplinaNaoOpt).isEmpty()) { //Se já existe disciplina com código, não pode criar outra
+            Disciplina d = new Disciplina(codigoDisciplinaNaoOpt, nomeNaoOpt, cursoNaoOpt);
             disciplinaDAO.save(d);
             return d;
         } else {

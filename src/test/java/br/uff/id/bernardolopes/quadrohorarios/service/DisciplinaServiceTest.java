@@ -15,6 +15,7 @@ import br.uff.id.bernardolopes.quadrohorarios.repository.DisciplinaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.repository.TurmaDAO;
 import br.uff.id.bernardolopes.quadrohorarios.controller.model.RequestDisciplina;
 import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -109,7 +110,7 @@ public class DisciplinaServiceTest {
         //Criação por fixture
         Curso c = Fixture.from(Curso.class).gimme("valido");
         //Hora do show
-        Disciplina d = service.criarDisciplina(CODIGO_DISCIPLINA, NOME_DISCIPLINA, c);
+        Disciplina d = service.criarDisciplina(Optional.of(CODIGO_DISCIPLINA), Optional.of(NOME_DISCIPLINA), Optional.of(c));
         //Asserções de valor
         assertEquals(CODIGO_DISCIPLINA, d.getCodigo());
         assertEquals(NOME_DISCIPLINA, d.getNome());
@@ -128,7 +129,7 @@ public class DisciplinaServiceTest {
         //Configuração do mock
         when(cursoDAO.findOne(c.getCodigo())).thenReturn(c);
         //Hora do show
-        Disciplina d = service.criarDisciplina(CODIGO_DISCIPLINA, NOME_DISCIPLINA, c.getCodigo());
+        Disciplina d = service.criarDisciplina(Optional.of(CODIGO_DISCIPLINA), Optional.of(NOME_DISCIPLINA), c.getCodigo());
         //Asserções de valor
         assertEquals(CODIGO_DISCIPLINA, d.getCodigo());
         assertEquals(NOME_DISCIPLINA, d.getNome());
@@ -179,7 +180,7 @@ public class DisciplinaServiceTest {
         //Configuração do mock mockList
         when(mockList.isEmpty()).thenReturn(Boolean.FALSE);
         //Exceção aqui
-        service.criarDisciplina(CODIGO_DISCIPLINA, NOME_DISCIPLINA, c);
+        service.criarDisciplina(Optional.of(CODIGO_DISCIPLINA), Optional.of(NOME_DISCIPLINA), Optional.of(c));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -189,7 +190,7 @@ public class DisciplinaServiceTest {
         //Configuração do mock
         when(cursoDAO.findOne(c.getCodigo())).thenReturn(c);
         //Exceção aqui
-        service.criarDisciplina(null, NOME_DISCIPLINA, c.getCodigo());
+        service.criarDisciplina(Optional.empty(), Optional.of(NOME_DISCIPLINA), c.getCodigo());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -199,12 +200,12 @@ public class DisciplinaServiceTest {
         //Configuração do mock
         when(cursoDAO.findOne(c.getCodigo())).thenReturn(c);
         //Exceção aqui
-        service.criarDisciplina(CODIGO_DISCIPLINA, null, c.getCodigo());
+        service.criarDisciplina(Optional.of(CODIGO_DISCIPLINA), Optional.empty(), c.getCodigo());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void insereNoBancoComCursoNuloDaErro() {
-        service.criarDisciplina(CODIGO_DISCIPLINA, NOME_DISCIPLINA, (Curso) null);
+        service.criarDisciplina(Optional.of(CODIGO_DISCIPLINA), Optional.of(NOME_DISCIPLINA), Optional.empty());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -212,7 +213,7 @@ public class DisciplinaServiceTest {
         //Configuração do mock
         when(cursoDAO.findOne(CODIGO_CURSO_INEXISTENTE)).thenReturn(null);
         //Exceção aqui
-        service.criarDisciplina(CODIGO_DISCIPLINA, NOME_DISCIPLINA, CODIGO_CURSO_INEXISTENTE);
+        service.criarDisciplina(Optional.of(CODIGO_DISCIPLINA), Optional.of(NOME_DISCIPLINA), CODIGO_CURSO_INEXISTENTE);
     }
 
     @Test(expected = IllegalArgumentException.class)
