@@ -40,7 +40,7 @@ public class RequestTurma implements Serializable {
     }
 
     public boolean isValid() {
-        return codigoTurma != null && codigoDisciplina != null;
+        return codigoTurma != null && codigoDisciplina != null && anoSemestre != null;
     }
 
     public String getAnoSemestre() {

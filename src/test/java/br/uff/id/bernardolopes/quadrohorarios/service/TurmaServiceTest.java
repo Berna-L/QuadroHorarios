@@ -18,6 +18,7 @@ import br.uff.id.bernardolopes.quadrohorarios.repository.VagaTurmaCursoDAO;
 import br.uff.id.bernardolopes.quadrohorarios.controller.model.RequestTurma;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -107,7 +108,7 @@ public class TurmaServiceTest {
         //Criação por fixture
         Disciplina d = Fixture.from(Disciplina.class).gimme("valido");
         //Hora do show
-        Turma t = service.criarTurma(CODIGO_TURMA, ANO_SEMESTRE, d);
+        Turma t = service.criarTurma(Optional.of(CODIGO_TURMA), Optional.of(ANO_SEMESTRE), Optional.of(d));
         //Asserções de valor
         assertEquals(CODIGO_TURMA, t.getCodigo());
         assertEquals(d, t.getDisciplina());
@@ -129,7 +130,7 @@ public class TurmaServiceTest {
         //Configuração do mock disciplinaDAO
         when(disciplinaDAO.findByCodigo(d.getCodigo())).thenReturn(mockList);
         //Hora do show
-        Turma t = service.criarTurma(CODIGO_TURMA, ANO_SEMESTRE, d.getCodigo());
+        Turma t = service.criarTurma(Optional.of(CODIGO_TURMA), Optional.of(ANO_SEMESTRE), d.getCodigo());
         //Asserções de valor
         assertEquals(CODIGO_TURMA, t.getCodigo());
         assertEquals(ANO_SEMESTRE, t.getAnoSemestre());
@@ -184,7 +185,7 @@ public class TurmaServiceTest {
         //Configuração do mock turmaDAO
         when(turmaDAO.findByCodigoAndAnoSemestreAndDisciplina(CODIGO_TURMA, ANO_SEMESTRE, d)).thenReturn(mockList);
         //Execeção aqui
-        service.criarTurma(CODIGO_TURMA, ANO_SEMESTRE, d);
+        service.criarTurma(Optional.of(CODIGO_TURMA), Optional.of(ANO_SEMESTRE), Optional.of(d));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -198,7 +199,7 @@ public class TurmaServiceTest {
         //Configuração do mock disciplinaDAO
         when(disciplinaDAO.findByCodigo(d.getCodigo())).thenReturn(mockList);
         //Exceção aqui
-        service.criarTurma(null, ANO_SEMESTRE, d.getCodigo());
+        service.criarTurma(Optional.empty(), Optional.of(ANO_SEMESTRE), d.getCodigo());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -212,12 +213,12 @@ public class TurmaServiceTest {
         //Configuração do mock disciplinaDAO
         when(disciplinaDAO.findByCodigo(d.getCodigo())).thenReturn(mockList);
         //Exceção aqui
-        service.criarTurma(CODIGO_TURMA, null, d.getCodigo());
+        service.criarTurma(Optional.of(CODIGO_TURMA), Optional.empty(), d.getCodigo());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void insereNoBancoComDisciplinaNuloDaErro() {
-        service.criarTurma(CODIGO_TURMA, ANO_SEMESTRE, (Disciplina) null);
+        service.criarTurma(Optional.of(CODIGO_TURMA), Optional.of(ANO_SEMESTRE), Optional.empty());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -229,7 +230,7 @@ public class TurmaServiceTest {
         //Configuração do mock disciplinaDAO
         when(disciplinaDAO.findByCodigo(CODIGO_DISCIPLINA_INEXISTENTE)).thenReturn(mockList);
         //Exceção aqui
-        service.criarTurma(CODIGO_TURMA, ANO_SEMESTRE, CODIGO_DISCIPLINA_INEXISTENTE);
+        service.criarTurma(Optional.of(CODIGO_TURMA), Optional.of(ANO_SEMESTRE), CODIGO_DISCIPLINA_INEXISTENTE);
     }
 
     @Test(expected = IllegalArgumentException.class)
